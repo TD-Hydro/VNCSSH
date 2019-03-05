@@ -1,0 +1,5 @@
+{
+    "python.linting.pylintArgs": [
+        "--disable=C, W0401, no-name-in-module, no-member, eval-used"
+    ]
+}

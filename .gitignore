@@ -112,3 +112,5 @@ vnc/*
 *.bak
 
 wxglade*
+
+ui/res/*

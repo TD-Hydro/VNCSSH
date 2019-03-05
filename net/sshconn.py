@@ -1,5 +1,4 @@
 import paramiko
-import re
 from multiprocessing import Process
 import subprocess
 from net.forward import forward_tunnel
@@ -33,20 +32,13 @@ class SSHConn:
         transport = self.ssht.get_transport()
         forward_tunnel(localPort, "localhost", remotePort, transport)
 
-    def OpenSSHTerminalWindow(self, ipad):
-        #subprocess.call("start powershell ssh {0}@{1} -i {2} -t \"ssh -i *.pem root@{3}\"" \
-        #.format(self.Username, self.IP, self.Key, ipad), shell=True)
-        subprocess.call("start powershell ssh {0}@{1} -i {2} -t \"ssh root@{3}\"" \
-        .format(self.Username, self.IP, self.Key, ipad), shell=True)
 
-    def OpenEnteringMachine(self):
-        #subprocess.call("start powershell ssh {0}@{1} -i {2} -t \"ssh -i *.pem root@{3}\"" \
-        #.format(self.Username, self.IP, self.Key, ipad), shell=True)
+    def OpenTerminal(self):
         subprocess.call("start powershell ssh {0}@{1} -i {2} -t" \
         .format(self.Username, self.IP, self.Key), shell=True)
     
-    def ListRemoteFile(self, remotePath, ipad):
-        stdin, stdout, stderr = self.sshc.exec_command('ssh root@{0} -t \"ls -FA {1}\"'.format(ipad, remotePath))
+    def ListRemoteFile(self, remotePath):
+        stdin, stdout, stderr = self.sshc.exec_command('ls -FA {0}'.format(remotePath))
         outread = stdout.read().decode("utf-8")
         directories = outread.split("\n")
         folders = []
@@ -62,33 +54,35 @@ class SSHConn:
                 files.append(dir)
         return (folders, files)
     
-    def SendFile(self, source, filename, sink, ipad, callback):
-        ft = self.sshc.open_sftp()
-        ft.put(source, "/home/{0}/{1}".format(self.Username, filename), callback)
-        stdin, stdout, stderr = self.sshc.exec_command('scp /home/{0}/{1} root@{2}:{3}{4} &echo success'.format(self.Username, filename, ipad, sink, filename))
-        outread = stdout.read().decode("utf-8")
-        err = stderr.read().decode("utf-8")
-        print(err)
-        if outread.strip() == "success":
-            self.sshc.exec_command('rm /home/{0}/{1}'.format(self.Username, filename))
-            return True
+    def SendFile(self, source, filename, sink, callback):
+        pass
+        # ft = self.sshc.open_sftp()
+        # ft.put(source, "/home/{0}/{1}".format(self.Username, filename), callback)
+        # stdin, stdout, stderr = self.sshc.exec_command('scp /home/{0}/{1} root@{2}:{3}{4} &echo success'.format(self.Username, filename, ipad, sink, filename))
+        # outread = stdout.read().decode("utf-8")
+        # err = stderr.read().decode("utf-8")
+        # print(err)
+        # if outread.strip() == "success":
+        #     self.sshc.exec_command('rm /home/{0}/{1}'.format(self.Username, filename))
+        #     return True
     
 
-    def GetFile(self, source, filename, sink, ipad, callback):
-        stdin, stdout, stderr = self.sshc.exec_command('scp root@{0}:{1} /home/{2}/{3} &echo success'.format(ipad, source, self.Username, filename))
-        outread = stdout.read().decode("utf-8")
-        err = stderr.read().decode("utf-8")
-        print(err)
-        if outread.strip() == "success":
-            ft = self.sshc.open_sftp()
-            ft.get("/home/{0}/{1}".format(self.Username, filename), sink + filename, callback)
-            self.sshc.exec_command('rm /home/{0}/{1}'.format(self.Username, filename))
+    def GetFile(self, source, filename, sink, callback):
+        pass
+        # stdin, stdout, stderr = self.sshc.exec_command('scp root@{0}:{1} /home/{2}/{3} &echo success'.format(ipad, source, self.Username, filename))
+        # outread = stdout.read().decode("utf-8")
+        # err = stderr.read().decode("utf-8")
+        # print(err)
+        # if outread.strip() == "success":
+        #     ft = self.sshc.open_sftp()
+        #     ft.get("/home/{0}/{1}".format(self.Username, filename), sink + filename, callback)
+        #     self.sshc.exec_command('rm /home/{0}/{1}'.format(self.Username, filename))
     
 
     def CloseConn(self):
         self.sshc.close()
-    def StartConn(self, isKey):
-        if isKey:
+    def StartConn(self):
+        if self.Password == None:
             self.sshc.connect(self.IP, 22, username=self.Username, key_filename=self.Key)
         else:
             self.sshc.connect(self.IP, 22, username=self.Username, password=self.Password)

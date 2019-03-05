@@ -4,13 +4,14 @@
 #
 
 import wx
-import socket
 import util.toolBox as tb
 import net.sshconn
 import util.credread
 
 from ui.AboutDialog import AboutDialog
 from ui.FilenameDialog import FilenameDialog
+from ui.SettingFrame import SettingFrame
+from ui.FileTransferFrame import FileTransferFrame
 
 from paramiko.ssh_exception import NoValidConnectionsError
 # begin wxGlade: dependencies
@@ -40,6 +41,10 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.Menu_close, id=item.GetId())
         self.frame_menubar.Append(wxglade_tmp_menu, "&File")
         wxglade_tmp_menu = wx.Menu()
+        item = wxglade_tmp_menu.Append(wx.ID_ANY, "Help Document\tF1", "")
+        self.Bind(wx.EVT_MENU, self.Menu_helpLink, id=item.GetId())
+        item = wxglade_tmp_menu.Append(wx.ID_ANY, "Settings", "")
+        self.Bind(wx.EVT_MENU, self.Menu_setting, id=item.GetId())
         item = wxglade_tmp_menu.Append(wx.ID_ANY, "About", "")
         self.Bind(wx.EVT_MENU, self.Menu_about, id=item.GetId())
         self.frame_menubar.Append(wxglade_tmp_menu, "&Help")
@@ -48,7 +53,7 @@ class MainFrame(wx.Frame):
         self.frame_statusbar = self.CreateStatusBar(1)
         self.comboBoxIP = wx.ComboBox(self, wx.ID_ANY, choices=[], style=wx.CB_DROPDOWN)
         self.textBoxUsr = wx.TextCtrl(self, wx.ID_ANY, "")
-        self.authChoise = wx.RadioBox(self, wx.ID_ANY, "Authentication method:", choices=["Password", "Public Key"], majorDimension=1, style=wx.RA_SPECIFY_ROWS)
+        self.authChoice = wx.RadioBox(self, wx.ID_ANY, "Authentication method:", choices=["Password", "Public Key"], majorDimension=1, style=wx.RA_SPECIFY_ROWS)
         self.labelKey = wx.StaticText(self, wx.ID_ANY, "SSH Key File: ", style=wx.ALIGN_LEFT)
         self.choiceKey = wx.Choice(self, wx.ID_ANY, choices=[])
         self.buttonKeyFile = wx.Button(self, wx.ID_ANY, "Add Key")
@@ -60,11 +65,13 @@ class MainFrame(wx.Frame):
         self.__set_properties()
         self.__do_layout()
 
-        self.Bind(wx.EVT_RADIOBOX, self.authChoise_onChoose, self.authChoise)
+        self.Bind(wx.EVT_RADIOBOX, self.authChoice_onChoose, self.authChoice)
         self.Bind(wx.EVT_BUTTON, self.buttonKeyFile_onClick, self.buttonKeyFile)
         self.Bind(wx.EVT_BUTTON, self.buttonConn_onClick, self.buttonConn)
         self.Bind(wx.EVT_BUTTON, self.buttonVNC_onClick, self.buttonVNC)
         # end wxGlade
+
+        self.sshc = None
 
     def __set_properties(self):
         # begin wxGlade: MainFrame.__set_properties
@@ -74,12 +81,12 @@ class MainFrame(wx.Frame):
         self.SetIcon(_icon)
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.frame_statusbar.SetStatusWidths([-1])
-
+        
         # statusbar fields
         frame_statusbar_fields = ["Not connected"]
         for i in range(len(frame_statusbar_fields)):
             self.frame_statusbar.SetStatusText(frame_statusbar_fields[i], i)
-        self.authChoise.SetSelection(0)
+        self.authChoice.SetSelection(0)
         self.labelKey.Hide()
         self.choiceKey.Hide()
         self.buttonKeyFile.SetMinSize((120, 35))
@@ -104,7 +111,7 @@ class MainFrame(wx.Frame):
         sizer_8.Add(self.textBoxUsr, 0, wx.ALL | wx.EXPAND, 0)
         sizer_8.AddGrowableCol(1)
         sizer_9.Add(sizer_8, 1, wx.ALL, 10)
-        sizer_5.Add(self.authChoise, 0, wx.ALL | wx.EXPAND, 5)
+        sizer_5.Add(self.authChoice, 0, wx.ALL | wx.EXPAND, 5)
         sizer_9.Add(sizer_5, 2, wx.ALL | wx.EXPAND, 0)
         sizer_1.Add(sizer_9, 0, wx.EXPAND, 0)
         sizer_7.Add(self.labelKey, 0, wx.ALL, 8)
@@ -122,12 +129,19 @@ class MainFrame(wx.Frame):
         # end wxGlade
 
     def Menu_shell(self, event):  # wxGlade: MainFrame.<event_handler>
-        print("Event handler 'Menu_shell' not implemented!")
-        event.Skip()
-
+        if self.sshc == None:
+            tb.MBox("Sever not connected", "Not Connected", 2)
+        else:
+            self.sshc.OpenTerminal()
+        
     def Menu_filetrans(self, event):  # wxGlade: MainFrame.<event_handler>
-        print("Event handler 'Menu_filetrans' not implemented!")
-        event.Skip()
+        if self.sshc == None:
+            tb.MBox("Sever not connected", "Not Connected", 2)
+        else:
+            self.sshc.StartConn()
+            fd = FileTransferFrame(self)
+            fd.FormInit(self.sshc)
+            fd.Show()
 
     def Menu_close(self, event):  # wxGlade: MainFrame.<event_handler>
         self.Destroy()
@@ -136,26 +150,10 @@ class MainFrame(wx.Frame):
         about = AboutDialog(self)
         about.SetVersionControl("0.3.0")
         about.ShowModal()
-
-    def authChoise_onChoose(self, event):  # wxGlade: MainFrame.<event_handler>
-        if self.authChoise.GetSelection() == 1:
-            self.labelKey.Show()
-            self.choiceKey.Show()
-            self.buttonKeyFile.Show()
-            self.labelPswd.Hide()
-            self.textBoxPswd.Hide()
-            self.Layout()
-        else:
-            self.labelKey.Hide()
-            self.choiceKey.Hide()
-            self.buttonKeyFile.Hide()
-            self.labelPswd.Show()
-            self.textBoxPswd.Show()
-            self.Layout()
+        
 
     def buttonKeyFile_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
-        fileDialog = wx.FileDialog(
-            self, "Open SSH Key File", wildcard="SSH key (*.pem)|*.pem", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        fileDialog = wx.FileDialog(self, "Open SSH Key File", wildcard="SSH key (*.pem)|*.pem", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         fileDialog.ShowModal()
         pathname = fileDialog.GetPath()
         fileDialog.Destroy()
@@ -173,51 +171,75 @@ class MainFrame(wx.Frame):
             newKeyDialog.Destroy()
 
     def buttonConn_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
-        if not tb.ValidIP(self.comboBoxIP.Value):
-            tb.MBox("IP address is illegal", "Error", 2)
+        if(self.buttonConn.GetLabel() == 'Disconnect'):
+            if self.sshc != None:
+                self.sshc = None
+            self.buttonConn.SetLabel('Connect')
+            self.frame_statusbar.SetStatusText("Not connected")
+            self.buttonVNC.Disable()
             return
+
+        # using domain is allowed
+        # if not tb.ValidIP(self.comboBoxIP.Value):
+        #     tb.MBox('IP address is illegal', 'Error', 2)
+        #     return
         if self.textBoxUsr.Value == "":
-            tb.MBox("Username cannot be empty", "Error", 2)
+            tb.MBox('Username cannot be empty', 'Error', 2)
             return
         self.buttonConn.Disable()
-        if self.authChoise.GetSelection() == 1:
+        self.frame_statusbar.SetStatusText("Connecting...")
+
+        if self.authChoice.GetSelection() == 1:
             keyfile = util.credread.GetAppData() + self.choiceKey.GetString(self.choiceKey.GetSelection()) + '.pem'
-            util.credread.ChangeUser(self.textBoxUsr.Value)
-            try:
-                self.sshc = net.sshconn.SSHConn(
-                    self.comboBoxIP.Value, self.textBoxUsr.Value, None, keyfile)
-                self.sshc.StartConn(True)
-            except NoValidConnectionsError:
-                wx.MessageDialog(None, 'Cannot connect to server： ' + self.comboBoxIP.Value,
+        try:
+            if self.authChoice.GetSelection() == 1:
+                self.sshc = net.sshconn.SSHConn(self.comboBoxIP.Value, self.textBoxUsr.Value, None, keyfile)
+                self.sshc.StartConn()
+            else:
+                self.sshc = net.sshconn.SSHConn(self.comboBoxIP.Value, self.textBoxUsr.Value, self.textBoxPswd.Value,  None)
+                self.sshc.StartConn()
+        except NoValidConnectionsError:
+            wx.MessageDialog(None, 'Cannot connect to server： ' + self.comboBoxIP.Value,
                                 'Error', wx.OK | wx.ICON_ERROR).ShowModal()
-            except TimeoutError as te:
-                wx.MessageDialog(None, 'Connect to server ' + self.comboBoxIP.Value+' failed：\n' + str(te),
+        except TimeoutError as te:
+            wx.MessageDialog(None, 'Connect to server ' + self.comboBoxIP.Value + ' failed：\n' + str(te),
                                 'Error', wx.OK | wx.ICON_ERROR).ShowModal()
-            finally:
-                self.buttonConn.Enable()
-            
-            self.sshc.CloseConn()
+        finally:
             self.buttonConn.Enable()
-            self.buttonConn.SetLabel("Disconnect")
-            self.frame_statusbar.SetStatusText("Connected to " + self.comboBoxIP.Value)
-        else:
-            util.credread.ChangeUser(self.textBoxUsr.Value)
-            try:
-                self.sshc = net.sshconn.SSHConn(
-                    self.comboBoxIP.Value, self.textBoxUsr.Value, self.textBoxPswd.Value,  None)
-                self.sshc.StartConn(False)
-            except NoValidConnectionsError:
-                wx.MessageDialog(None, 'Cannot connect to server： ' + self.comboBoxIP.Value,
-                                'Error', wx.OK | wx.ICON_ERROR).ShowModal()
-            except TimeoutError as te:
-                wx.MessageDialog(None, 'Connect to server ' + self.comboBoxIP.Value+' failed：\n' + str(te),
-                                'Error', wx.OK | wx.ICON_ERROR).ShowModal()
-            self.sshc.CloseConn()
-            
-            self.frame_statusbar.SetStatusText("Connected to " + self.comboBoxIP.Value)
+        
+        util.credread.ChangeUser(self.textBoxUsr.Value)
+        util.credread.UpdateIPList(self.comboBoxIP.Value)
+        self.sshc.CloseConn()
+        self.buttonVNC.Enable()
+        self.buttonConn.Enable()
+        self.buttonConn.SetLabel("Disconnect")
+        self.frame_statusbar.SetStatusText("Connected to " + self.comboBoxIP.Value)
 
     def buttonVNC_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
         print("Event handler 'buttonVNC_onClick' not implemented!")
         event.Skip()
 
+    def authChoice_onChoose(self, event):  # wxGlade: MainFrame.<event_handler>
+        if self.authChoice.GetSelection() == 1:
+            self.labelKey.Show()
+            self.choiceKey.Show()
+            self.buttonKeyFile.Show()
+            self.labelPswd.Hide()
+            self.textBoxPswd.Hide()
+            self.Layout()
+        else:
+            self.labelKey.Hide()
+            self.choiceKey.Hide()
+            self.buttonKeyFile.Hide()
+            self.labelPswd.Show()
+            self.textBoxPswd.Show()
+            self.Layout()
+
+    def Menu_helpLink(self, event):  # wxGlade: MainFrame.<event_handler>
+        tb.OpenALink("https://sshvnc.tdhydro.com/")
+
+    def Menu_setting(self, event):  # wxGlade: MainFrame.<event_handler>
+        setting = SettingFrame(self)
+        setting.LoadSetting()
+        setting.Show()
 # end of class MainFrame

@@ -1,5 +1,6 @@
 import wx
 from ui.MainFrame import MainFrame
+import util.credread
 import multiprocessing
 import os
 from configparser import ConfigParser
@@ -19,6 +20,7 @@ if __name__ == '__main__':
         config = ConfigParser()
         config["key"] = {"keyfile": "{}"}
         config["user"] = {"username": ""}
+        config["ip"] = {"ip": "[]"}
         with open(appdataAppName + '\\credential.ini', 'w') as configfile:
             config.write(configfile)
     if not os.path.exists(appdataAppName + '\\settings.ini'):
@@ -29,8 +31,9 @@ if __name__ == '__main__':
     app = wx.App()
     a = MainFrame(None)
     # init fill
-    #a.textBoxUsr.Value = net.keyread.InitUser()
-    # a.choiceKey.AppendItems(net.keyread.FindKey())
+    a.textBoxUsr.Value = util.credread.InitUser()
+    a.choiceKey.AppendItems(list(util.credread.FindKey().keys()))
+    a.comboBoxIP.AppendItems(util.credread.InitIPList())
     #
     a.Show()
     app.MainLoop()

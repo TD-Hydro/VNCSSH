@@ -1,4 +1,6 @@
 import wx
+import os
+import webbrowser
 
 def MBox(content, title, label):
     '''
@@ -17,3 +19,9 @@ def ValidIP(address):
         return len(host_bytes) == 4 and len(valid) == 4
     except:
         return False
+
+def OpenALink(link):
+    if os.name == 'nt':
+        os.system("start \"\" " + link)
+    else:
+        webbrowser.open(link)
