@@ -6,58 +6,21 @@ import json
 def GetAppData():
     return os.environ["LOCALAPPDATA"] + "\\SSHVNCP\\"
 
-def FindKey():
+def GetVNCSetting():
     config = ConfigParser()
-    config.read(GetAppData()+"credential.ini")
-    a = json.loads(config.get("key","keyfile"))
-    return a
+    config.read(GetAppData()+"settings.ini")
+    localmark = config.get('vnc','local')
+    local = True if localmark=='1' else False
+    realVNCPath = config.get('vnc','realpath')
+    port = config.get('vnc','remoteport')
+    return local, realVNCPath, port
 
-def InitUser():
+def SetVNCSetting(localMark,realPath,port):
     config = ConfigParser()
-    config.read(GetAppData()+"credential.ini")
-    a = config.get("user","username")
-    return a
-
-def ChangeUser(username):
-    config = ConfigParser()
-    config.read(GetAppData() + "credential.ini")
-    config.set("user","username", username)
-    with open(GetAppData()+"credential.ini", 'w') as configfile:
-        config.write(configfile)
-
-def InitIPList():
-    config = ConfigParser()
-    config.read(GetAppData()+"credential.ini")
-    a = eval(config.get("ip","ip"))
-    return a
-
-def UpdateIPList(remoteIp):
-    config = ConfigParser()
-    config.read(GetAppData() + "credential.ini")
-    a = eval(config.get("ip","ip"))
-    if remoteIp not in a:
-        a.append(remoteIp)
-        newlist =  '[\'' + '\', \''.join(a)  + '\']'
-        config.set("ip","ip", newlist)
-        with open(GetAppData()+"credential.ini", 'w') as configfile:
-            config.write(configfile)
-
-
-def CopyPem(pathname,keyname):
-    #copy the pem
-    newitem = False
-    keys = FindKey()
-    if keyname not in keys:
-        newitem = True
-        keys[keyname] = keyname
-        CopyPemFile(pathname, keyname)
-    config = ConfigParser()
-    config.read(GetAppData()+"credential.ini")
-    config.set("key","keyfile",json.dumps(keys,ensure_ascii=False))
-    with open(GetAppData()+"credential.ini", 'w') as configfile:
+    config.read(GetAppData()+"settings.ini")
+    config['vnc']['local'] = '1' if localMark else '0'
+    config['vnc']['realpath'] = realPath
+    config['vnc']['remoteport'] = port
+    with open(GetAppData()+"settings.ini", 'w') as configfile:
         config.write(configfile)
     
-    return newitem
-
-def CopyPemFile(pathname,keyname):
-    shutil.copyfile(pathname, GetAppData() + keyname + ".pem")

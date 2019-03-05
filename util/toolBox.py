@@ -1,6 +1,7 @@
 import wx
 import os
 import webbrowser
+from configparser import ConfigParser
 
 def MBox(content, title, label):
     '''
@@ -25,3 +26,25 @@ def OpenALink(link):
         os.system("start \"\" " + link)
     else:
         webbrowser.open(link)
+
+def CheckAndAddSetting(setName, itemList):
+    '''
+    Add setting if not
+    @param setName of the set :str
+    @param itemList item list [(itemName:str, defaultValue:str)]
+    '''
+    appdataAppName = 'SSHVNCP'
+
+    config = ConfigParser()
+    config.read(appdataAppName + "\\settings.ini")
+    changed = False
+    if setName not in config.sections():
+        config[setName] = {}
+        changed = True        
+    for i in itemList:
+        if i[0] not in config[setName]:
+            config[setName][i[0]] = i[1]
+            changed = True
+    if changed:
+        with open(appdataAppName + "\\settings.ini", 'w') as configfile:
+            config.write(configfile)

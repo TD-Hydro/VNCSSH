@@ -4,6 +4,7 @@
 #
 
 import wx
+import util.settingread
 # begin wxGlade: dependencies
 # end wxGlade
 
@@ -16,13 +17,14 @@ class SettingFrame(wx.Frame):
         # begin wxGlade: SettingFrame.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
-        self.SetSize((463, 295))
+        self.SetSize((384, 298))
         self.notebook_1 = wx.Notebook(self, wx.ID_ANY)
         self.panel_1 = wx.Panel(self.notebook_1, wx.ID_ANY)
         self.radioBuiltInVNC = wx.RadioButton(self.panel_1, wx.ID_ANY, "Built-in VNC Viewer")
         self.radioRealVNC = wx.RadioButton(self.panel_1, wx.ID_ANY, "RealVNC Viewer")
         self.textCtrlVNCPath = wx.TextCtrl(self.panel_1, wx.ID_ANY, "")
         self.buttonVNCPath = wx.Button(self.panel_1, wx.ID_ANY, "Browse...")
+        self.textCtrlRemotePort = wx.TextCtrl(self.panel_1, wx.ID_ANY, "")
         self.buttonOK = wx.Button(self, wx.ID_ANY, "OK")
         self.buttonCancel = wx.Button(self, wx.ID_ANY, "Cancel")
 
@@ -39,7 +41,9 @@ class SettingFrame(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: SettingFrame.__set_properties
         self.SetTitle("Settings")
-        self.textCtrlVNCPath.SetMinSize((200, 34))
+        self.textCtrlVNCPath.SetMinSize((200, 28))
+        self.buttonVNCPath.SetMinSize((88, 28))
+        self.textCtrlRemotePort.SetMinSize((70, 28))
         # end wxGlade
 
     def __do_layout(self):
@@ -47,25 +51,43 @@ class SettingFrame(wx.Frame):
         sizer_4 = wx.BoxSizer(wx.VERTICAL)
         sizer_15 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_11 = wx.BoxSizer(wx.VERTICAL)
+        sizer_17 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_14 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_11.Add(self.radioBuiltInVNC, 0, wx.ALL, 5)
         sizer_11.Add(self.radioRealVNC, 0, wx.ALL, 5)
         sizer_14.Add(self.textCtrlVNCPath, 0, wx.ALL, 5)
         sizer_14.Add(self.buttonVNCPath, 0, wx.ALL, 5)
-        sizer_11.Add(sizer_14, 1, wx.EXPAND, 0)
+        sizer_11.Add(sizer_14, 0, wx.BOTTOM, 6)
+        portLabel = wx.StaticText(self.panel_1, wx.ID_ANY, "Remote Port:")
+        portLabel.SetBackgroundColour(wx.Colour(255, 255, 255))
+        sizer_17.Add(portLabel, 0, wx.ALL, 7)
+        sizer_17.Add(self.textCtrlRemotePort, 0, wx.ALL, 0)
+        sizer_11.Add(sizer_17, 1, 0, 0)
         self.panel_1.SetSizer(sizer_11)
         self.notebook_1.AddPage(self.panel_1, "VNC Viewer")
         sizer_4.Add(self.notebook_1, 1, wx.EXPAND, 0)
         sizer_15.Add(self.buttonOK, 0, 0, 0)
         sizer_15.Add(self.buttonCancel, 0, 0, 0)
-        sizer_4.Add(sizer_15, 0, wx.ALIGN_BOTTOM | wx.ALIGN_RIGHT, 0)
+        sizer_4.Add(sizer_15, 0, wx.ALIGN_BOTTOM | wx.ALIGN_RIGHT | wx.SHAPED, 0)
         self.SetSizer(sizer_4)
         self.Layout()
         # end wxGlade
 
 
     def LoadSetting(self):
-        pass
+        local, real, port = util.settingread.GetVNCSetting()
+        if local:
+            self.radioBuiltInVNC.SetValue(True)
+            self.radioRealVNC.SetValue(False)
+            self.buttonVNCPath.Disable()
+            self.textCtrlVNCPath.Disable()
+        else:
+            self.radioBuiltInVNC.SetValue(False)
+            self.radioRealVNC.SetValue(True)
+            self.buttonVNCPath.Enable()
+            self.textCtrlVNCPath.Enable()
+        self.textCtrlVNCPath.SetValue(real)
+        self.textCtrlRemotePort.SetValue(port)
 
     def radioBuiltInVNC_selected(self, event):  # wxGlade: SettingFrame.<event_handler>
         self.buttonVNCPath.Disable()
@@ -83,8 +105,8 @@ class SettingFrame(wx.Frame):
         self.textCtrlVNCPath.Value = pathname
 
     def buttonOK_onClick(self, event):  # wxGlade: SettingFrame.<event_handler>
-        print("Event handler 'buttonOK_onClick' not implemented!")
-        event.Skip()
+        util.settingread.SetVNCSetting(self.radioBuiltInVNC.GetValue(), self.textCtrlVNCPath.GetValue(), self.textCtrlRemotePort.GetValue())
+        self.Destroy()
 
     def buttonCancel_onClick(self, event):  # wxGlade: SettingFrame.<event_handler>
         self.Destroy()

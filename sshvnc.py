@@ -1,6 +1,7 @@
 import wx
 from ui.MainFrame import MainFrame
 import util.credread
+import util.toolBox
 import multiprocessing
 import os
 from configparser import ConfigParser
@@ -25,6 +26,7 @@ if __name__ == '__main__':
             config.write(configfile)
     if not os.path.exists(appdataAppName + '\\settings.ini'):
         open(appdataAppName + '\\settings.ini', 'a').close()
+    util.toolBox.CheckAndAddSetting('vnc',[('local','1'), ('realpath',''), ('remoteport','5901')])
 
     # Init app
     os.chdir(cwd)

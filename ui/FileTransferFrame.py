@@ -119,36 +119,11 @@ class FileTransferFrame(wx.Frame):
         pathRemote = "/root/"
         self.ShowRemoteDir(pathRemote)
 
-    def TransferProgressSend(self, transferred, remaining):
-        self.progressBar.SetValue(transferred/2/remaining)
+    def TransferProgress(self, transferred, remaining):
+        self.progressBar.SetValue(transferred/remaining)
 
-    def TransferProgressRecv(self, transferred, remaining):
-        self.progressBar.SetValue(transferred/2/remaining + 0.5)
-
-    def GetWindowsDirStructure(self, path):
-        dirList = []
-        if path == "" or path == "\\":
-            dl = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-            drives = ['%s:' % d for d in dl if os.path.exists('%s:' % d)]
-            for d in drives:
-                dirList.append(("\U0001f4c1", d, "Folder"))
-        else:
-            for df in os.listdir(path):
-                if df[0] == "$":
-                    continue
-                elif not os.path.isfile(path + df):
-                    dirList.append(("\U0001f4c1", df, "Folder"))
-            for df in os.listdir(path):
-                if df[0] == "$":
-                    continue
-                elif os.path.isfile(path + df):
-                    dt = "File"
-                    if len(df.split(".")) > 1:
-                        dt = df.split(".")[-1].upper() + " file"
-                    dirList.append(("\U0001f5cb", df, dt))
-        return dirList
         
-    def GetUnixDirStructure(self, pathFolder, pathFile):
+    def GetDirStructure(self, pathFolder, pathFile):
         dirList = []
         for f1 in pathFolder:
             dirList.append(("\U0001f4c1", f1, "Folder"))
@@ -162,11 +137,23 @@ class FileTransferFrame(wx.Frame):
     def ShowLocalDir(self, path):
         self.listLocalDir.DeleteAllItems()
         self.pathHistory.append(path)
+        pathFolder = []
+        pathFile = []
+        if path == "" or path == "\\":
+            pathFolder = ['%s:' % d for d in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' if os.path.exists('%s:' % d)]
+        else:
+            for f in os.listdir(path):
+                if f[0] != "$":
+                    if os.path.isfile(path + f):
+                        pathFile.append(f)
+                    else:
+                        pathFolder.append(f)
         # To prevent too much history
         if len(self.pathHistory) > 10:
             self.pathHistory.pop(0)
+        
         try:
-            dirList = self.GetWindowsDirStructure(path)
+            dirList = self.GetDirStructure(pathFolder, pathFile)
             for d in dirList:
                 self.listLocalDir.Append(d)
         except PermissionError:
@@ -187,7 +174,7 @@ class FileTransferFrame(wx.Frame):
         if len(self.remotePathHistory) > 10:
             self.remotePathHistory.pop(0)
         try:
-            dirlist = self.GetUnixDirStructure(pathFolder, pathFile)
+            dirlist = self.GetDirStructure(pathFolder, pathFile)
             for d in dirlist:
                 self.listRemoteDir.Append(d)
         except PermissionError:
@@ -232,11 +219,8 @@ class FileTransferFrame(wx.Frame):
             self.listLocalDir.FocusedItem, 1).GetText()
         filePath = self.pathHistory[-1]
         remotePath = self.remotePathHistory[-1]
-        result = self.sshc.SendFile(
-            filePath + fileName, fileName, remotePath, self.TransferProgressSend)
-        if (result):
-            self.progressBar.SetValue(1)
-            self.remoteRefresh_onClick(event)
+        self.sshc.SendFile(filePath + fileName, fileName, remotePath, self.TransferProgress)
+        self.remoteRefresh_onClick(event)
     
     def localRefresh_onClick(self, event): # wxGlade: FileTransferFrame.<event_handler>
         path = self.pathHistory[-1]
@@ -283,7 +267,7 @@ class FileTransferFrame(wx.Frame):
             self.listRemoteDir.FocusedItem, 1).GetText()
         filePath = self.remotePathHistory[-1]
         localPath = self.pathHistory[-1]
-        self.sshc.GetFile(filePath + fileName, fileName, localPath, self.TransferProgressRecv)
+        self.sshc.GetFile(filePath + fileName, fileName, localPath, self.TransferProgress)
         self.localRefresh_onClick(event)
 
     def listRemoteDir_onClick(self, event): # wxGlade: FileTransferFrame.<event_handler>

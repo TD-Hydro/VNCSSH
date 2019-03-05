@@ -4,9 +4,13 @@
 #
 
 import wx
+import subprocess
+from multiprocessing import Process
+
 import util.toolBox as tb
 import net.sshconn
 import util.credread
+import util.settingread
 
 from ui.AboutDialog import AboutDialog
 from ui.FilenameDialog import FilenameDialog
@@ -89,9 +93,8 @@ class MainFrame(wx.Frame):
         self.authChoice.SetSelection(0)
         self.labelKey.Hide()
         self.choiceKey.Hide()
-        self.buttonKeyFile.SetMinSize((120, 35))
+        self.buttonKeyFile.SetMinSize((120, 23))
         self.buttonKeyFile.Hide()
-        self.textBoxPswd.SetMinSize((135, 28))
         self.buttonVNC.Enable(False)
         # end wxGlade
 
@@ -116,7 +119,7 @@ class MainFrame(wx.Frame):
         sizer_1.Add(sizer_9, 0, wx.EXPAND, 0)
         sizer_7.Add(self.labelKey, 0, wx.ALL, 8)
         sizer_7.Add(self.choiceKey, 0, wx.ALL, 5)
-        sizer_7.Add(self.buttonKeyFile, 0, wx.LEFT, 10)
+        sizer_7.Add(self.buttonKeyFile, 0, wx.ALL, 5)
         sizer_7.Add(self.labelPswd, 0, wx.ALL, 8)
         sizer_7.Add(self.textBoxPswd, 0, wx.ALL, 5)
         sizer_1.Add(sizer_7, 1, wx.ALL | wx.EXPAND, 0)
@@ -216,8 +219,26 @@ class MainFrame(wx.Frame):
         self.frame_statusbar.SetStatusText("Connected to " + self.comboBoxIP.Value)
 
     def buttonVNC_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
-        print("Event handler 'buttonVNC_onClick' not implemented!")
-        event.Skip()
+        localport = 5901
+        useBuiltIn, RealVNC, portString = util.settingread.GetVNCSetting()
+        port = int(portString)
+        if self.buttonVNC.Label == "Connect to VNC":
+            self.sshc.OpenVNCTunnel(localport, port)
+            self.buttonVNC.Label = "Disconnect VNC"
+            if useBuiltIn:
+                from vnc.vncviewer import InternalCall
+                internalVnc = Process(target=InternalCall, args=("localhost", localport, 32))
+                internalVnc.daemon = True
+                internalVnc.start()
+            else:
+                subprocess.Popen([RealVNC, "localhost:{0}".format(localport)])
+        else:
+            try:
+                self.sshc.StopTunnel(port)
+            except KeyError as key:
+                print(key)
+            finally:
+                self.buttonVNC.Label = "Connect to VNC"
 
     def authChoice_onChoose(self, event):  # wxGlade: MainFrame.<event_handler>
         if self.authChoice.GetSelection() == 1:

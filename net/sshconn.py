@@ -15,12 +15,11 @@ class SSHConn:
         self.ssht = paramiko.SSHClient()
         self.ssht.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    def OpenVNCWindow(self, localPort, remotePort):
+    def OpenVNCTunnel(self, localPort, remotePort):
         t0 = Process(target = self.TunnelThread, args=(localPort,remotePort))
         t0.daemon = True
         t0.start()
         self.t[remotePort] = t0
-        subprocess.Popen(["bin/vncviewer.exe", "localhost:{0}".format(localPort)])
         return True
 
     def StopTunnel(self,remotePort):
@@ -55,28 +54,14 @@ class SSHConn:
         return (folders, files)
     
     def SendFile(self, source, filename, sink, callback):
-        pass
-        # ft = self.sshc.open_sftp()
-        # ft.put(source, "/home/{0}/{1}".format(self.Username, filename), callback)
-        # stdin, stdout, stderr = self.sshc.exec_command('scp /home/{0}/{1} root@{2}:{3}{4} &echo success'.format(self.Username, filename, ipad, sink, filename))
-        # outread = stdout.read().decode("utf-8")
-        # err = stderr.read().decode("utf-8")
-        # print(err)
-        # if outread.strip() == "success":
-        #     self.sshc.exec_command('rm /home/{0}/{1}'.format(self.Username, filename))
-        #     return True
-    
+        ft = self.sshc.open_sftp()
+        ft.put(source, sink + filename, callback)
+        return True
 
     def GetFile(self, source, filename, sink, callback):
-        pass
-        # stdin, stdout, stderr = self.sshc.exec_command('scp root@{0}:{1} /home/{2}/{3} &echo success'.format(ipad, source, self.Username, filename))
-        # outread = stdout.read().decode("utf-8")
-        # err = stderr.read().decode("utf-8")
-        # print(err)
-        # if outread.strip() == "success":
-        #     ft = self.sshc.open_sftp()
-        #     ft.get("/home/{0}/{1}".format(self.Username, filename), sink + filename, callback)
-        #     self.sshc.exec_command('rm /home/{0}/{1}'.format(self.Username, filename))
+        ft = self.sshc.open_sftp()
+        ft.get(source, sink + filename, callback)
+        return True
     
 
     def CloseConn(self):
