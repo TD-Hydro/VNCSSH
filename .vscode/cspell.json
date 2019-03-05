@@ -1,0 +1,23 @@
+{
+    "version": "0.1",
+    "language": "en",
+    "words": [
+        "app",
+        "appdata",
+        "chdir",
+        "filezilla",
+        "getcwd",
+        "isdir",
+        "mkdir",
+        "name",
+        "paramiko",
+        "pswd",
+        "pygame",
+        "redistributable",
+        "sshc",
+        "sshvnc",
+        "sshvncp",
+        "wxglade"
+    ],
+    "flagWords": []
+}

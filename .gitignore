@@ -104,3 +104,11 @@ venv.bak/
 .mypy_cache/
 
 template.md
+
+res/original/*
+
+vnc/*
+
+*.bak
+
+wxglade*
