@@ -1,7 +1,5 @@
 # SSHVNC
 ## VNC over SSH and many more
-### THIS PROJECT IS TESTING. DO NOT USE!
-Expect to be update on Mar 5, 2019.
 
 # SSHVNC
 
@@ -27,7 +25,13 @@ However, if you just want the simple VNC through ssh, this is your best choice. 
 
 ### Terminal
 
+Currently the program is using PowerShell (on Windows) as the terminal.  Powershell requires OpenSSH installed on Windows. For Windows version prior to windows 10 fall 2018 update, check [OpenSSH for Windows](https://www.mls-software.com/opensshd.html) for options. 
+
+A simple terminal is under development
+
+<!--
 There are two ways using terminal: PowerShell (on Windows) or simple terminal offered in the program. Powershell requires OpenSSH installed on Windows. For Windows version prior to windows 10 fall 2018 update, check [OpenSSH for Windows](https://www.mls-software.com/opensshd.html) for options. Simple terminal should not need OpenSSH installed.
+-->
 
 ### File Transfer
 
@@ -70,18 +74,22 @@ python3 sshvnc.py
 ```
 This will start the user interfaces.
 
+<!--
 ### Binaries
 Download installation or binary files here.
 
 If you want to use zip packets in Windows, make sure you install the Microsoft Visual C++ Redistributable 2015 or 2017 (x86/x64, depending on your system and download packets).
 
 32-bit version should support Windows on ARM, however, this is not tested. Please use the installation version.
+-->
+
+### Known bugs
+Repeating password for powershell
+
 
 ### Using
 
-## Is there any other task this project can do?
-
-Well, basically, the goal of the project is to make port forwarding easier. If you need 
+To bo done
 
 ## License
 
