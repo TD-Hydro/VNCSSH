@@ -143,7 +143,7 @@ class MainFrame(wx.Frame):
         else:
             self.sshc.StartConn()
             fd = FileTransferFrame(self)
-            fd.FormInit(self.sshc)
+            fd.FormInit(self.sshc, self.textBoxUsr.Value)
             fd.Show()
 
     def Menu_close(self, event):  # wxGlade: MainFrame.<event_handler>

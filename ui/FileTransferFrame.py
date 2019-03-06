@@ -108,7 +108,7 @@ class FileTransferFrame(wx.Frame):
         self.sshc.CloseConn()
         self.Destroy()
 
-    def FormInit(self, sshc):
+    def FormInit(self, sshc, username):
         if not hasattr(self, "pathHistory"):
             self.pathHistory = []
         if not hasattr(self, "remotePathHistory"):
@@ -116,7 +116,10 @@ class FileTransferFrame(wx.Frame):
         self.sshc = sshc
         path = ""
         self.ShowLocalDir(path)
-        pathRemote = "/root/"
+        if username == 'root':
+            pathRemote = "/root/"
+        else:
+            pathRemote = "/home/"+username
         self.ShowRemoteDir(pathRemote)
 
     def TransferProgress(self, transferred, remaining):
