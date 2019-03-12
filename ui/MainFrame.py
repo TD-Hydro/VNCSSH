@@ -5,6 +5,7 @@
 
 import wx
 import subprocess
+import threading
 from multiprocessing import Process
 
 import util.toolBox as tb
@@ -18,6 +19,7 @@ from ui.SettingFrame import SettingFrame
 from ui.FileTransferFrame import FileTransferFrame
 
 from paramiko.ssh_exception import NoValidConnectionsError
+from wx.lib.pubsub import pub
 # begin wxGlade: dependencies
 # end wxGlade
 
@@ -76,13 +78,12 @@ class MainFrame(wx.Frame):
         # end wxGlade
 
         self.sshc = None
+        pub.subscribe(self.AfterConnection, "Connected")
+        pub.subscribe(self.EnableInfomationChange, "Fail")
 
     def __set_properties(self):
         # begin wxGlade: MainFrame.__set_properties
         self.SetTitle("VNC over SSH")
-        _icon = wx.NullIcon
-        _icon.CopyFromBitmap(wx.Bitmap("./res/remote.ico", wx.BITMAP_TYPE_ANY))
-        self.SetIcon(_icon)
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.frame_statusbar.SetStatusWidths([-1])
         
@@ -97,6 +98,10 @@ class MainFrame(wx.Frame):
         self.buttonKeyFile.Hide()
         self.buttonVNC.Enable(False)
         # end wxGlade
+
+        # Windows icon attachment 
+        icon = wx.Icon(wx.IconLocation("./res/remote.ico"))
+        self.SetIcon(icon)
 
     def __do_layout(self):
         # begin wxGlade: MainFrame.__do_layout
@@ -151,7 +156,7 @@ class MainFrame(wx.Frame):
 
     def Menu_about(self, event):  # wxGlade: MainFrame.<event_handler>
         about = AboutDialog(self)
-        about.SetVersionControl("0.3.0")
+        about.SetVersionControl(self.version)
         about.ShowModal()
         
 
@@ -178,8 +183,8 @@ class MainFrame(wx.Frame):
             if self.sshc != None:
                 self.sshc = None
             self.buttonConn.SetLabel('Connect')
-            self.frame_statusbar.SetStatusText("Not connected")
             self.buttonVNC.Disable()
+            self.EnableInfomationChange()
             return
 
         # using domain is allowed
@@ -190,26 +195,26 @@ class MainFrame(wx.Frame):
             tb.MBox('Username cannot be empty', 'Error', 2)
             return
         self.buttonConn.Disable()
+        self.comboBoxIP.Disable()
+        self.textBoxUsr.Disable()
+        self.textBoxPswd.Disable()
+        self.choiceKey.Disable()
+        self.authChoice.Disable()
+        self.buttonConn.Disable()
         self.frame_statusbar.SetStatusText("Connecting...")
 
+        keyfile = None
         if self.authChoice.GetSelection() == 1:
             keyfile = util.credread.GetAppData() + self.choiceKey.GetString(self.choiceKey.GetSelection()) + '.pem'
-        try:
-            if self.authChoice.GetSelection() == 1:
-                self.sshc = net.sshconn.SSHConn(self.comboBoxIP.Value, self.textBoxUsr.Value, None, keyfile)
-                self.sshc.StartConn()
-            else:
-                self.sshc = net.sshconn.SSHConn(self.comboBoxIP.Value, self.textBoxUsr.Value, self.textBoxPswd.Value,  None)
-                self.sshc.StartConn()
-        except NoValidConnectionsError:
-            wx.MessageDialog(None, 'Cannot connect to server： ' + self.comboBoxIP.Value,
-                                'Error', wx.OK | wx.ICON_ERROR).ShowModal()
-        except TimeoutError as te:
-            wx.MessageDialog(None, 'Connect to server ' + self.comboBoxIP.Value + ' failed：\n' + str(te),
-                                'Error', wx.OK | wx.ICON_ERROR).ShowModal()
-        finally:
-            self.buttonConn.Enable()
+            self.sshc = net.sshconn.SSHConn(self.comboBoxIP.Value, self.textBoxUsr.Value, None, keyfile)
+        else:
+            self.sshc = net.sshconn.SSHConn(self.comboBoxIP.Value, self.textBoxUsr.Value, self.textBoxPswd.Value,  None)
         
+        connThread = AsyncConnectionCheck(self.sshc, self.comboBoxIP.Value)
+        connThread.start()
+        
+
+    def AfterConnection(self):
         util.credread.ChangeUser(self.textBoxUsr.Value)
         util.credread.UpdateIPList(self.comboBoxIP.Value)
         self.sshc.CloseConn()
@@ -217,6 +222,15 @@ class MainFrame(wx.Frame):
         self.buttonConn.Enable()
         self.buttonConn.SetLabel("Disconnect")
         self.frame_statusbar.SetStatusText("Connected to " + self.comboBoxIP.Value)
+
+    def EnableInfomationChange(self):
+        self.comboBoxIP.Enable()
+        self.textBoxUsr.Enable()
+        self.textBoxPswd.Enable()
+        self.choiceKey.Enable()
+        self.authChoice.Enable()
+        self.buttonConn.Enable()
+        self.frame_statusbar.SetStatusText("Not connected")
 
     def buttonVNC_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
         localport = 5901
@@ -263,4 +277,24 @@ class MainFrame(wx.Frame):
         setting = SettingFrame(self)
         setting.LoadSetting()
         setting.Show()
+
+    def CurrentVersion(self, version):
+        self.version = version
 # end of class MainFrame
+
+
+class AsyncConnectionCheck(threading.Thread):
+    def __init__(self, sshc, ip):
+        threading.Thread.__init__(self)
+        self.sshc = sshc
+        self.ip = ip
+    def run(self):
+        try:
+            self.sshc.StartConn()
+            wx.CallAfter(pub.sendMessage,"Connected")
+        except NoValidConnectionsError as nce:
+            tb.MBox('Connect to server ' + self.ip + ' failed: \n' + str(nce),'Error', 2)
+            wx.CallAfter(pub.sendMessage,"Fail")
+        except TimeoutError as te:
+            tb.MBox('Connect to server ' + self.ip + ' failed: \n' + str(te),'Error', 2)
+            wx.CallAfter(pub.sendMessage,"Fail")

@@ -27,14 +27,21 @@ class SSHConn:
         self.ssht.close()
 
     def TunnelThread(self, localPort, remotePort):
-        self.ssht.connect(self.IP, 22, username=self.Username, key_filename=self.Key)
+        if self.Password == None:
+            self.ssht.connect(self.IP, 22, username=self.Username, key_filename=self.Key)
+        else:
+            self.ssht.connect(self.IP, 22, username=self.Username, password=self.Password)
         transport = self.ssht.get_transport()
         forward_tunnel(localPort, "localhost", remotePort, transport)
 
 
     def OpenTerminal(self):
-        subprocess.call("start powershell ssh {0}@{1} -i {2} -t" \
-        .format(self.Username, self.IP, self.Key), shell=True)
+        if self.Password == None:
+            subprocess.call("start powershell ssh {0}@{1} -i {2} -t" \
+            .format(self.Username, self.IP, self.Key), shell=True)
+        else:
+            subprocess.call("start powershell ssh {0}@{1} -t" \
+            .format(self.Username, self.IP), shell=True)
     
     def ListRemoteFile(self, remotePath):
         stdin, stdout, stderr = self.sshc.exec_command('ls -FA {0}'.format(remotePath))

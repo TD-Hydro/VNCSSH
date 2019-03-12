@@ -1,8 +1,6 @@
 # SSHVNC
 ## VNC over SSH and many more
 
-# SSHVNC
-
 A GUI program for easy control of your remote host/cloud with VNC through SSH.
 
 Basically, this project puts what used to need two to three different programs into one.
@@ -25,7 +23,7 @@ However, if you just want the simple VNC through ssh, this is your best choice. 
 
 ### Terminal
 
-Currently the program is using PowerShell (on Windows) as the terminal.  Powershell requires OpenSSH installed on Windows. For Windows version prior to windows 10 fall 2018 update, check [OpenSSH for Windows](https://www.mls-software.com/opensshd.html) for options. 
+Currently the program is using PowerShell (on Windows) as the terminal.  Powershell requires OpenSSH installed on Windows. For Windows version prior to windows 10 fall 2018 update, please check [OpenSSH for Windows](https://www.mls-software.com/opensshd.html) for options, as you may want to install it.
 
 A simple terminal is under development
 
@@ -40,11 +38,11 @@ The program comes with a simple file transfer using SFTP. For now, this is the o
 ### VNC Viewer
 
 There does exist a python based [viewer](https://github.com/TD-Hydro/python-vnc-viewer) 
-that can achieve basic tasks. However, the efficiency and functionalities are not as good as the RealVNC® Viewer. The program does support user to use RealVNC® Viewer of there own.
+that can achieve basic tasks. However, the efficiency and functionalities are not as good as the RealVNC® VNC Viewer. The program, however, does support user to use RealVNC® VNC Viewer of there own.
 
 Due to the copyright and license issue, I cannot offer RealVNC Viewer binary files. You need to download or purchase RealVNC Viewer based on your situations (personal and commercial). You can download if from [here](https://www.realvnc.com/en/connect/download/viewer/).
 
-RealVNC®, VNC® Viewer is not a freeware. RealVNC®, VNC® and RFB® are trademarks of RealVNC® Limited.
+RealVNC® VNC Viewer is not a freeware. RealVNC®, VNC® and RFB® are trademarks of RealVNC® Limited.
 
 ## Limitations
 
@@ -83,7 +81,7 @@ If you want to use zip packets in Windows, make sure you install the Microsoft V
 32-bit version should support Windows on ARM, however, this is not tested. Please use the installation version.
 -->
 
-### Known bugs
+### Known issues
 Repeating password for powershell
 
 

@@ -119,7 +119,7 @@ class FileTransferFrame(wx.Frame):
         if username == 'root':
             pathRemote = "/root/"
         else:
-            pathRemote = "/home/"+username
+            pathRemote = "/home/" + username + "/"
         self.ShowRemoteDir(pathRemote)
 
     def TransferProgress(self, transferred, remaining):

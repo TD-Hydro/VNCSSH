@@ -114,3 +114,7 @@ vnc/*
 wxglade*
 
 ui/res/*
+
+\#*\#
+
+setup.py
