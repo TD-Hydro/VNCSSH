@@ -72,14 +72,14 @@ python3 sshvnc.py
 ```
 This will start the user interfaces.
 
-<!--
+
 ### Binaries
-Download installation or binary files here.
+Download installation or binary files [here](https://github.com/TD-Hydro/SSHVNC/releases).
 
 If you want to use zip packets in Windows, make sure you install the Microsoft Visual C++ Redistributable 2015 or 2017 (x86/x64, depending on your system and download packets).
 
 32-bit version should support Windows on ARM, however, this is not tested. Please use the installation version.
--->
+
 
 ### Known issues
 Repeating password for powershell
