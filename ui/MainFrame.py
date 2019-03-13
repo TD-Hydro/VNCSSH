@@ -94,7 +94,6 @@ class MainFrame(wx.Frame):
         self.authChoice.SetSelection(0)
         self.labelKey.Hide()
         self.choiceKey.Hide()
-        self.buttonKeyFile.SetMinSize((120, 23))
         self.buttonKeyFile.Hide()
         self.buttonVNC.Enable(False)
         # end wxGlade

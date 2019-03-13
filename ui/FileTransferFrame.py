@@ -17,7 +17,7 @@ class FileTransferFrame(wx.Frame):
         # begin wxGlade: FileTransferFrame.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
-        self.SetSize((808, 603))
+        self.SetSize((800, 600))
         self.buttonLocalBack = wx.Button(self, wx.ID_ANY, u"\u2190")
         self.buttonLocalUp = wx.Button(self, wx.ID_ANY, u"\u2191")
         self.buttonLocalRefresh = wx.Button(self, wx.ID_ANY, u"\u27f3")
@@ -57,6 +57,7 @@ class FileTransferFrame(wx.Frame):
         _icon = wx.NullIcon
         _icon.CopyFromBitmap(wx.Bitmap("./res/remote.ico", wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.buttonLocalBack.SetMinSize((35, 35))
         self.buttonLocalBack.SetToolTip("Go back")
         self.buttonLocalUp.SetMinSize((35, 35))

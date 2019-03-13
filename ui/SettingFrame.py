@@ -41,6 +41,7 @@ class SettingFrame(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: SettingFrame.__set_properties
         self.SetTitle("Settings")
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.textCtrlVNCPath.SetMinSize((200, 28))
         self.buttonVNCPath.SetMinSize((88, 28))
         self.textCtrlRemotePort.SetMinSize((70, 28))

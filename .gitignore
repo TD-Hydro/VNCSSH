@@ -118,3 +118,5 @@ ui/res/*
 \#*\#
 
 setup.py
+
+innoscript.iss
