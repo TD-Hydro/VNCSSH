@@ -364,7 +364,11 @@
         </object>
     </object>
     <object class="FileTransferFrame" name="frameFile" base="EditFrame">
+<<<<<<< HEAD
         <size>808, 603</size>
+=======
+        <size>800, 600</size>
+>>>>>>> 0d89f1acaf8bc7ae8ade17178644f99f85f3f91c
         <background>wxSYS_COLOUR_MENU</background>
         <title>File Transfer</title>
         <style>wxDEFAULT_FRAME_STYLE</style>

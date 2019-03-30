@@ -17,7 +17,7 @@ class FileTransferFrame(wx.Frame):
         # begin wxGlade: FileTransferFrame.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
-        self.SetSize((808, 603))
+        self.SetSize((800, 600))
         self.buttonLocalBack = wx.Button(self, wx.ID_ANY, u"\u2190")
         self.buttonLocalUp = wx.Button(self, wx.ID_ANY, u"\u2191")
         self.buttonLocalRefresh = wx.Button(self, wx.ID_ANY, u"\u27f3")

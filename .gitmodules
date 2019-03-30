@@ -1,4 +1,4 @@
 
 [submodule "vnc"]
 	path = vnc
-	url = git@github.com:TD-Hydro/python-vnc-viewer.git
+	url = https://github.com/TD-Hydro/python-vnc-viewer.git
