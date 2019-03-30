@@ -6,6 +6,7 @@
         "app",
         "appdata",
         "chdir",
+        "ctypes",
         "dropdown",
         "filezilla",
         "getcwd",
@@ -21,6 +22,7 @@
         "redistributable",
         "rfind",
         "sftp",
+        "shcore",
         "shutil",
         "sshc",
         "ssht",
@@ -28,6 +30,7 @@
         "sshvncp",
         "std",
         "vncviewer",
+        "windll",
         "wxglade"
     ],
     "flagWords": []

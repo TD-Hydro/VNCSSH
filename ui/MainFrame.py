@@ -32,6 +32,7 @@ class MainFrame(wx.Frame):
         # begin wxGlade: MainFrame.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
+        self.SetSize((600, 350))
         
         # Menu Bar
         self.frame_menubar = wx.MenuBar()
@@ -64,7 +65,9 @@ class MainFrame(wx.Frame):
         self.choiceKey = wx.Choice(self, wx.ID_ANY, choices=[])
         self.buttonKeyFile = wx.Button(self, wx.ID_ANY, "Add Key")
         self.labelPswd = wx.StaticText(self, wx.ID_ANY, "Password:")
-        self.textBoxPswd = wx.TextCtrl(self, wx.ID_ANY, "")
+        self.textBoxPswd = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_PASSWORD)
+        self.textBoxPswdShow = wx.TextCtrl(self, wx.ID_ANY, "")
+        self.checkBoxShowPswd = wx.CheckBox(self, wx.ID_ANY, "Show Password")
         self.buttonConn = wx.Button(self, wx.ID_ANY, "Connect")
         self.buttonVNC = wx.Button(self, wx.ID_ANY, "Connect to VNC")
 
@@ -73,11 +76,19 @@ class MainFrame(wx.Frame):
 
         self.Bind(wx.EVT_RADIOBOX, self.authChoice_onChoose, self.authChoice)
         self.Bind(wx.EVT_BUTTON, self.buttonKeyFile_onClick, self.buttonKeyFile)
+        self.Bind(wx.EVT_TEXT_ENTER, self.textBoxPswd_PressEnter, self.textBoxPswd)
+        self.Bind(wx.EVT_TEXT_ENTER, self.textBoxPwsdShow_PressEnter, self.textBoxPswdShow)
+        self.Bind(wx.EVT_CHECKBOX, self.checkBox_onChange, self.checkBoxShowPswd)
         self.Bind(wx.EVT_BUTTON, self.buttonConn_onClick, self.buttonConn)
         self.Bind(wx.EVT_BUTTON, self.buttonVNC_onClick, self.buttonVNC)
         # end wxGlade
 
+        ### Additional event ###
+        self.textBoxUsr.Bind(wx.EVT_KEY_DOWN, self.textBoxUsr_PressTab )
+        self.comboBoxIP.Bind(wx.EVT_KEY_DOWN, self.comboBoxIP_PressTab )
+        ### Class variable ###
         self.sshc = None
+        ### Multiprocess Subscribe ###
         pub.subscribe(self.AfterConnection, "Connected")
         pub.subscribe(self.EnableInfomationChange, "Fail")
 
@@ -94,8 +105,8 @@ class MainFrame(wx.Frame):
         self.authChoice.SetSelection(0)
         self.labelKey.Hide()
         self.choiceKey.Hide()
-        self.buttonKeyFile.SetMinSize((120, 23))
         self.buttonKeyFile.Hide()
+        self.textBoxPswdShow.Hide()
         self.buttonVNC.Enable(False)
         # end wxGlade
 
@@ -127,12 +138,13 @@ class MainFrame(wx.Frame):
         sizer_7.Add(self.buttonKeyFile, 0, wx.ALL, 5)
         sizer_7.Add(self.labelPswd, 0, wx.ALL, 8)
         sizer_7.Add(self.textBoxPswd, 0, wx.ALL, 5)
+        sizer_7.Add(self.textBoxPswdShow, 0, wx.ALL, 5)
+        sizer_7.Add(self.checkBoxShowPswd, 0, wx.BOTTOM | wx.RIGHT | wx.TOP, 9)
         sizer_1.Add(sizer_7, 1, wx.ALL | wx.EXPAND, 0)
         sizer_6.Add(self.buttonConn, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
         sizer_6.Add(self.buttonVNC, 0, wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, 5)
         sizer_1.Add(sizer_6, 0, wx.EXPAND, 0)
         self.SetSizer(sizer_1)
-        sizer_1.Fit(self)
         self.Layout()
         # end wxGlade
 
@@ -188,9 +200,9 @@ class MainFrame(wx.Frame):
             return
 
         # using domain is allowed
-        # if not tb.ValidIP(self.comboBoxIP.Value):
-        #     tb.MBox('IP address is illegal', 'Error', 2)
-        #     return
+        if self.comboBoxIP.Value == "":
+            tb.MBox('IP address is illegal', 'Error', 2)
+            return
         if self.textBoxUsr.Value == "":
             tb.MBox('Username cannot be empty', 'Error', 2)
             return
@@ -198,9 +210,14 @@ class MainFrame(wx.Frame):
         self.comboBoxIP.Disable()
         self.textBoxUsr.Disable()
         self.textBoxPswd.Disable()
+        self.textBoxPswdShow.Disable()
+        self.checkBoxShowPswd.Disable()
         self.choiceKey.Disable()
         self.authChoice.Disable()
         self.buttonConn.Disable()
+        # make sure the password is copied
+        if self.checkBoxShowPswd.IsChecked():
+            self.textBoxPswd.Value = self.textBoxPswdShow.Value
         self.frame_statusbar.SetStatusText("Connecting...")
 
         keyfile = None
@@ -227,6 +244,8 @@ class MainFrame(wx.Frame):
         self.comboBoxIP.Enable()
         self.textBoxUsr.Enable()
         self.textBoxPswd.Enable()
+        self.textBoxPswdShow.Enable()
+        self.checkBoxShowPswd.Enable()
         self.choiceKey.Enable()
         self.authChoice.Enable()
         self.buttonConn.Enable()
@@ -261,6 +280,8 @@ class MainFrame(wx.Frame):
             self.buttonKeyFile.Show()
             self.labelPswd.Hide()
             self.textBoxPswd.Hide()
+            self.textBoxPswdShow.Hide()
+            self.checkBoxShowPswd.Hide()
             self.Layout()
         else:
             self.labelKey.Hide()
@@ -268,6 +289,8 @@ class MainFrame(wx.Frame):
             self.buttonKeyFile.Hide()
             self.labelPswd.Show()
             self.textBoxPswd.Show()
+            self.textBoxPswdShow.Hide()
+            self.checkBoxShowPswd.Show()
             self.Layout()
 
     def Menu_helpLink(self, event):  # wxGlade: MainFrame.<event_handler>
@@ -280,6 +303,41 @@ class MainFrame(wx.Frame):
 
     def CurrentVersion(self, version):
         self.version = version
+
+    def checkBox_onChange(self, event):  # wxGlade: MainFrame.<event_handler>
+        if self.checkBoxShowPswd.IsChecked():
+            self.textBoxPswd.Hide()
+            self.textBoxPswdShow.Show()
+            self.textBoxPswdShow.Value = self.textBoxPswd.Value
+            self.Layout()
+        else:
+            self.textBoxPswd.Show()
+            self.textBoxPswdShow.Hide()
+            self.textBoxPswd.Value = self.textBoxPswdShow.Value
+            self.Layout()
+
+    def textBoxPswd_PressEnter(self, event):  # wxGlade: MainFrame.<event_handler>
+        self.buttonConn_onClick(event)
+
+    def textBoxPwsdShow_PressEnter(self, event):  # wxGlade: MainFrame.<event_handler>
+        self.buttonConn_onClick(event)
+
+
+    ##### Tab #####
+
+    def textBoxUsr_PressTab(self, event):
+        key = event.GetKeyCode()
+        if key == wx.WXK_TAB:
+            if self.checkBoxShowPswd.IsChecked():
+                self.textBoxPswdShow.SetFocus()
+            else:
+                self.textBoxPswd.SetFocus()
+        event.Skip()
+    def comboBoxIP_PressTab(self, event):
+        key = event.GetKeyCode()
+        if key == wx.WXK_TAB:
+            self.textBoxUsr.SetFocus()
+        event.Skip()
 # end of class MainFrame
 
 

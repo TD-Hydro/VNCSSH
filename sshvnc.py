@@ -2,6 +2,7 @@ import wx
 import multiprocessing
 import os
 import sys
+import ctypes
 
 import util.credread
 import util.toolBox
@@ -10,6 +11,7 @@ import util.fakestd
 from configparser import ConfigParser
 from ui.MainFrame import MainFrame
 
+
 #import net.keyread
 if __name__ == '__main__':
     if getattr(sys, 'frozen', False):
@@ -17,6 +19,10 @@ if __name__ == '__main__':
         sys.stderr = util.fakestd.Fakestd()
     multiprocessing.freeze_support()
     
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(True)
+    except:
+        pass
 
     cwd = os.getcwd()
     appdataAppName = 'SSHVNCP'
@@ -45,6 +51,6 @@ if __name__ == '__main__':
     a.choiceKey.AppendItems(list(util.credread.FindKey().keys()))
     a.comboBoxIP.AppendItems(util.credread.InitIPList())
     #
-    a.CurrentVersion("0.3.1")
+    a.CurrentVersion("0.3.2")
     a.Show()
     app.MainLoop()

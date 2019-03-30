@@ -1,3 +1,7 @@
+## 0.3.2
+- Add "show password" function
+- Add Tab support
+  
 ## 0.3.1
 - Fix the bugs for connections using password
 - Cx_freeze code compatible

@@ -57,6 +57,7 @@ class FileTransferFrame(wx.Frame):
         _icon = wx.NullIcon
         _icon.CopyFromBitmap(wx.Bitmap("./res/remote.ico", wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.buttonLocalBack.SetMinSize((35, 35))
         self.buttonLocalBack.SetToolTip("Go back")
         self.buttonLocalUp.SetMinSize((35, 35))

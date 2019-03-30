@@ -41,9 +41,11 @@ class SettingFrame(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: SettingFrame.__set_properties
         self.SetTitle("Settings")
+        self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.textCtrlVNCPath.SetMinSize((200, 28))
         self.buttonVNCPath.SetMinSize((88, 28))
         self.textCtrlRemotePort.SetMinSize((70, 28))
+        self.notebook_1.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         # end wxGlade
 
     def __do_layout(self):
@@ -59,7 +61,6 @@ class SettingFrame(wx.Frame):
         sizer_14.Add(self.buttonVNCPath, 0, wx.ALL, 5)
         sizer_11.Add(sizer_14, 0, wx.BOTTOM, 6)
         portLabel = wx.StaticText(self.panel_1, wx.ID_ANY, "Remote Port:")
-        portLabel.SetBackgroundColour(wx.Colour(255, 255, 255))
         sizer_17.Add(portLabel, 0, wx.ALL, 7)
         sizer_17.Add(self.textCtrlRemotePort, 0, wx.ALL, 0)
         sizer_11.Add(sizer_17, 1, 0, 0)
