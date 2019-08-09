@@ -1,23 +1,29 @@
-import wx
+
 import multiprocessing
 import os
 import sys
 import ctypes
+import builtins
 
 import util.credread
 import util.toolBox
 import util.fakestd
 
+from wx import App, GetTranslation
 from configparser import ConfigParser
 from ui.MainFrame import MainFrame
+from util.update import AsyncUpdateCheck
 
 
-#import net.keyread
 if __name__ == '__main__':
+    # Freeze support
     if getattr(sys, 'frozen', False):
         sys.stdout = util.fakestd.Fakestd()
         sys.stderr = util.fakestd.Fakestd()
     multiprocessing.freeze_support()
+
+    #internationalization
+    builtins.__dict__['_'] = GetTranslation
     
     try:
         ctypes.windll.shcore.SetProcessDpiAwareness(True)
@@ -25,7 +31,7 @@ if __name__ == '__main__':
         pass
 
     cwd = os.getcwd()
-    appdataAppName = 'SSHVNCP'
+    appdataAppName = 'VNCSSH'
     # Write appdata
     appdataPath = os.environ["LOCALAPPDATA"]
     os.chdir(appdataPath)
@@ -42,15 +48,21 @@ if __name__ == '__main__':
         open(appdataAppName + '\\settings.ini', 'a').close()
     util.toolBox.CheckAndAddSetting('vnc',[('local','1'), ('realpath',''), ('remoteport','5901')])
 
+    # Check version
+    appVersion = "0.3.3"
+    updateCheck = AsyncUpdateCheck(appVersion, False)
+    updateCheck.start()
+    
     # Init app
     os.chdir(cwd)
-    app = wx.App()
+    
+    app = App()
     a = MainFrame(None)
     # init fill
     a.textBoxUsr.Value = util.credread.InitUser()
     a.choiceKey.AppendItems(list(util.credread.FindKey().keys()))
     a.comboBoxIP.AppendItems(util.credread.InitIPList())
     #
-    a.CurrentVersion("0.3.2")
+    a.CurrentVersion(appVersion)
     a.Show()
     app.MainLoop()

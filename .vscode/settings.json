@@ -1,5 +1,18 @@
 {
     "python.linting.pylintArgs": [
         "--disable=C, W0401, no-name-in-module, no-member, eval-used"
+    ],
+    "cSpell.words": [
+        "cffi",
+        "executables",
+        "idna",
+        "idnadata",
+        "numpy",
+        "pycparser",
+        "pyreadline",
+        "pywin",
+        "scipy",
+        "xmlrpc",
+        "zope"
     ]
 }

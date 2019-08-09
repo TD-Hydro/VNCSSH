@@ -33,7 +33,7 @@ def CheckAndAddSetting(setName, itemList):
     @param setName of the set :str
     @param itemList item list [(itemName:str, defaultValue:str)]
     '''
-    appdataAppName = 'SSHVNCP'
+    appdataAppName = 'VNCSSH'
 
     config = ConfigParser()
     config.read(appdataAppName + "\\settings.ini")

@@ -1,3 +1,7 @@
+## 0.3.3
+- Change name to "VNCSSH"
+- Add multi language support
+
 ## 0.3.2
 - Add "show password" function
 - Add Tab support

@@ -17,18 +17,31 @@ from ui.AboutDialog import AboutDialog
 from ui.FilenameDialog import FilenameDialog
 from ui.SettingFrame import SettingFrame
 from ui.FileTransferFrame import FileTransferFrame
+from util.update import AsyncUpdateCheck
 
-from paramiko.ssh_exception import NoValidConnectionsError
+from paramiko.ssh_exception import NoValidConnectionsError, AuthenticationException
 from wx.lib.pubsub import pub
+
 # begin wxGlade: dependencies
 # end wxGlade
 
 # begin wxGlade: extracode
 # end wxGlade
 
-
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
+        ### Internationalization ###
+        
+        self.locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        if self.locale.IsOk():
+            self.locale.AddCatalogLookupPathPrefix('locale')
+            self.locale.AddCatalog('vncssh')
+        ### Class variable ###
+        self.sshc = None
+        ### Multiprocess Subscribe ###
+        pub.subscribe(self.AfterConnection, 'Connected')
+        pub.subscribe(self.EnableInfomationChange, 'Fail')
+
         # begin wxGlade: MainFrame.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
@@ -38,38 +51,40 @@ class MainFrame(wx.Frame):
         self.frame_menubar = wx.MenuBar()
         wxglade_tmp_menu = wx.Menu()
         wxglade_tmp_menu_sub = wx.Menu()
-        item = wxglade_tmp_menu_sub.Append(wx.ID_ANY, "Shell\tCtrl+T", "")
+        item = wxglade_tmp_menu_sub.Append(wx.ID_ANY, _(u"Shell\tCtrl+T"), _(u""))
         self.Bind(wx.EVT_MENU, self.Menu_shell, id=item.GetId())
-        item = wxglade_tmp_menu_sub.Append(wx.ID_ANY, "File Transfer\tCtrl+F", "")
+        item = wxglade_tmp_menu_sub.Append(wx.ID_ANY, _(u"File Transfer\tCtrl+F"), _(u""))
         self.Bind(wx.EVT_MENU, self.Menu_filetrans, id=item.GetId())
-        wxglade_tmp_menu.Append(wx.ID_ANY, "&Tools", wxglade_tmp_menu_sub, "")
+        wxglade_tmp_menu.Append(wx.ID_ANY, _(u"&Tools"), wxglade_tmp_menu_sub, _(u""))
         wxglade_tmp_menu.AppendSeparator()
-        item = wxglade_tmp_menu.Append(wx.ID_ANY, "E&xit\tAlt+F4", "")
+        item = wxglade_tmp_menu.Append(wx.ID_ANY, _(u"Check for Updates..."), _(u""))
+        self.Bind(wx.EVT_MENU, self.Menu_checkUpdate, id=item.GetId())
+        item = wxglade_tmp_menu.Append(wx.ID_ANY, _(u"E&xit\tAlt+F4"), _(u""))
         self.Bind(wx.EVT_MENU, self.Menu_close, id=item.GetId())
-        self.frame_menubar.Append(wxglade_tmp_menu, "&File")
+        self.frame_menubar.Append(wxglade_tmp_menu, _(u"&File"))
         wxglade_tmp_menu = wx.Menu()
-        item = wxglade_tmp_menu.Append(wx.ID_ANY, "Help Document\tF1", "")
+        item = wxglade_tmp_menu.Append(wx.ID_ANY, _(u"Help Document\tF1"), _(u""))
         self.Bind(wx.EVT_MENU, self.Menu_helpLink, id=item.GetId())
-        item = wxglade_tmp_menu.Append(wx.ID_ANY, "Settings", "")
+        item = wxglade_tmp_menu.Append(wx.ID_ANY, _(u"Settings"), _(u""))
         self.Bind(wx.EVT_MENU, self.Menu_setting, id=item.GetId())
-        item = wxglade_tmp_menu.Append(wx.ID_ANY, "About", "")
+        item = wxglade_tmp_menu.Append(wx.ID_ANY, _(u"About"), _(u""))
         self.Bind(wx.EVT_MENU, self.Menu_about, id=item.GetId())
-        self.frame_menubar.Append(wxglade_tmp_menu, "&Help")
+        self.frame_menubar.Append(wxglade_tmp_menu, _(u"&Help"))
         self.SetMenuBar(self.frame_menubar)
         # Menu Bar end
         self.frame_statusbar = self.CreateStatusBar(1)
         self.comboBoxIP = wx.ComboBox(self, wx.ID_ANY, choices=[], style=wx.CB_DROPDOWN)
-        self.textBoxUsr = wx.TextCtrl(self, wx.ID_ANY, "")
-        self.authChoice = wx.RadioBox(self, wx.ID_ANY, "Authentication method:", choices=["Password", "Public Key"], majorDimension=1, style=wx.RA_SPECIFY_ROWS)
-        self.labelKey = wx.StaticText(self, wx.ID_ANY, "SSH Key File: ", style=wx.ALIGN_LEFT)
+        self.textBoxUsr = wx.TextCtrl(self, wx.ID_ANY, _(u""))
+        self.authChoice = wx.RadioBox(self, wx.ID_ANY, _(u"Authentication method:"), choices=[_(u"Password"), _(u"Public Key")], majorDimension=1, style=wx.RA_SPECIFY_ROWS)
+        self.labelKey = wx.StaticText(self, wx.ID_ANY, _(u"SSH Key File: "), style=wx.ALIGN_LEFT)
         self.choiceKey = wx.Choice(self, wx.ID_ANY, choices=[])
-        self.buttonKeyFile = wx.Button(self, wx.ID_ANY, "Add Key")
-        self.labelPswd = wx.StaticText(self, wx.ID_ANY, "Password:")
-        self.textBoxPswd = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_PASSWORD)
-        self.textBoxPswdShow = wx.TextCtrl(self, wx.ID_ANY, "")
-        self.checkBoxShowPswd = wx.CheckBox(self, wx.ID_ANY, "Show Password")
-        self.buttonConn = wx.Button(self, wx.ID_ANY, "Connect")
-        self.buttonVNC = wx.Button(self, wx.ID_ANY, "Connect to VNC")
+        self.buttonKeyFile = wx.Button(self, wx.ID_ANY, _(u"Add Key"))
+        self.labelPswd = wx.StaticText(self, wx.ID_ANY, _(u"Password:"))
+        self.textBoxPswd = wx.TextCtrl(self, wx.ID_ANY, _(u""), style=wx.TE_PASSWORD)
+        self.textBoxPswdShow = wx.TextCtrl(self, wx.ID_ANY, _(u""))
+        self.checkBoxShowPswd = wx.CheckBox(self, wx.ID_ANY, _(u"Show Password"))
+        self.buttonConn = wx.Button(self, wx.ID_ANY, _(u"Connect"))
+        self.buttonVNC = wx.Button(self, wx.ID_ANY, _(u"Connect to VNC"))
 
         self.__set_properties()
         self.__do_layout()
@@ -86,20 +101,15 @@ class MainFrame(wx.Frame):
         ### Additional event ###
         self.textBoxUsr.Bind(wx.EVT_KEY_DOWN, self.textBoxUsr_PressTab )
         self.comboBoxIP.Bind(wx.EVT_KEY_DOWN, self.comboBoxIP_PressTab )
-        ### Class variable ###
-        self.sshc = None
-        ### Multiprocess Subscribe ###
-        pub.subscribe(self.AfterConnection, "Connected")
-        pub.subscribe(self.EnableInfomationChange, "Fail")
 
     def __set_properties(self):
         # begin wxGlade: MainFrame.__set_properties
-        self.SetTitle("VNC over SSH")
+        self.SetTitle(_(u"VNC over SSH"))
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.frame_statusbar.SetStatusWidths([-1])
         
         # statusbar fields
-        frame_statusbar_fields = ["Not connected"]
+        frame_statusbar_fields = [_(u"Not connected")]
         for i in range(len(frame_statusbar_fields)):
             self.frame_statusbar.SetStatusText(frame_statusbar_fields[i], i)
         self.authChoice.SetSelection(0)
@@ -111,7 +121,7 @@ class MainFrame(wx.Frame):
         # end wxGlade
 
         # Windows icon attachment 
-        icon = wx.Icon(wx.IconLocation("./res/remote.ico"))
+        icon = wx.Icon(wx.IconLocation('./res/remote.ico'))
         self.SetIcon(icon)
 
     def __do_layout(self):
@@ -122,10 +132,10 @@ class MainFrame(wx.Frame):
         sizer_9 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_5 = wx.BoxSizer(wx.VERTICAL)
         sizer_8 = wx.FlexGridSizer(2, 2, 8, 5)
-        labelIp = wx.StaticText(self, wx.ID_ANY, "IP Address:")
+        labelIp = wx.StaticText(self, wx.ID_ANY, _(u"IP Address:"))
         sizer_8.Add(labelIp, 0, wx.ALIGN_CENTER_VERTICAL, 0)
         sizer_8.Add(self.comboBoxIP, 0, wx.ALL | wx.EXPAND, 0)
-        labelUsr = wx.StaticText(self, wx.ID_ANY, "Username: ", style=wx.ALIGN_LEFT | wx.ALIGN_RIGHT)
+        labelUsr = wx.StaticText(self, wx.ID_ANY, _(u"Username: "), style=wx.ALIGN_LEFT | wx.ALIGN_RIGHT)
         sizer_8.Add(labelUsr, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALL, 0)
         sizer_8.Add(self.textBoxUsr, 0, wx.ALL | wx.EXPAND, 0)
         sizer_8.AddGrowableCol(1)
@@ -150,13 +160,13 @@ class MainFrame(wx.Frame):
 
     def Menu_shell(self, event):  # wxGlade: MainFrame.<event_handler>
         if self.sshc == None:
-            tb.MBox("Sever not connected", "Not Connected", 2)
+            tb.MBox(_(u"Sever not connected"), _(u"Not Connected"), 2)
         else:
             self.sshc.OpenTerminal()
         
     def Menu_filetrans(self, event):  # wxGlade: MainFrame.<event_handler>
         if self.sshc == None:
-            tb.MBox("Sever not connected", "Not Connected", 2)
+            tb.MBox(_(u"Sever not connected"), _(u"Not Connected"), 2)
         else:
             self.sshc.StartConn()
             fd = FileTransferFrame(self)
@@ -173,38 +183,38 @@ class MainFrame(wx.Frame):
         
 
     def buttonKeyFile_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
-        fileDialog = wx.FileDialog(self, "Open SSH Key File", wildcard="SSH key (*.pem)|*.pem", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        fileDialog = wx.FileDialog(self, _(u"Open SSH Key File"), wildcard='SSH key (*.pem)|*.pem', style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         fileDialog.ShowModal()
         pathname = fileDialog.GetPath()
         fileDialog.Destroy()
-        if (pathname != ""):
+        if pathname != '':
             newKeyDialog = FilenameDialog(self)
             if (newKeyDialog.ShowModal() == wx.ID_OK):
                 newkeypath = newKeyDialog.dTextName.Value
                 print(newkeypath)
-                if (newkeypath != ""):
+                if (newkeypath != ''):
                     if (util.credread.CopyPem(pathname, newkeypath)):
                         self.choiceKey.Append(newkeypath)
                 else:
                     wx.MessageDialog(
-                        None, 'Name cannot be an empty string', 'Info', wx.OK).ShowModal()
+                        None, _(u"Name cannot be an empty string"), _(u"Info"), wx.OK).ShowModal()
             newKeyDialog.Destroy()
 
     def buttonConn_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
-        if(self.buttonConn.GetLabel() == 'Disconnect'):
+        if self.buttonConn.GetLabel() == _(u"Disconnect"):
             if self.sshc != None:
                 self.sshc = None
-            self.buttonConn.SetLabel('Connect')
+            self.buttonConn.SetLabel(_(u"Connect"))
             self.buttonVNC.Disable()
             self.EnableInfomationChange()
             return
 
         # using domain is allowed
-        if self.comboBoxIP.Value == "":
-            tb.MBox('IP address is illegal', 'Error', 2)
+        if self.comboBoxIP.Value == '':
+            tb.MBox(_(u"IP address is illegal"), _(u"Error"), 2)
             return
-        if self.textBoxUsr.Value == "":
-            tb.MBox('Username cannot be empty', 'Error', 2)
+        if self.textBoxUsr.Value == '':
+            tb.MBox(_(u"Username cannot be empty"), _(u"Error"), 2)
             return
         self.buttonConn.Disable()
         self.comboBoxIP.Disable()
@@ -218,7 +228,7 @@ class MainFrame(wx.Frame):
         # make sure the password is copied
         if self.checkBoxShowPswd.IsChecked():
             self.textBoxPswd.Value = self.textBoxPswdShow.Value
-        self.frame_statusbar.SetStatusText("Connecting...")
+        self.frame_statusbar.SetStatusText(_(u"Connecting..."))
 
         keyfile = None
         if self.authChoice.GetSelection() == 1:
@@ -237,8 +247,8 @@ class MainFrame(wx.Frame):
         self.sshc.CloseConn()
         self.buttonVNC.Enable()
         self.buttonConn.Enable()
-        self.buttonConn.SetLabel("Disconnect")
-        self.frame_statusbar.SetStatusText("Connected to " + self.comboBoxIP.Value)
+        self.buttonConn.SetLabel(_(u"Disconnect"))
+        self.frame_statusbar.SetStatusText(_(u"Connected to ") + self.comboBoxIP.Value)
 
     def EnableInfomationChange(self):
         self.comboBoxIP.Enable()
@@ -249,29 +259,29 @@ class MainFrame(wx.Frame):
         self.choiceKey.Enable()
         self.authChoice.Enable()
         self.buttonConn.Enable()
-        self.frame_statusbar.SetStatusText("Not connected")
+        self.frame_statusbar.SetStatusText(_(u"Not connected"))
 
     def buttonVNC_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
         localport = 5901
         useBuiltIn, RealVNC, portString = util.settingread.GetVNCSetting()
         port = int(portString)
-        if self.buttonVNC.Label == "Connect to VNC":
+        if self.buttonVNC.Label == _(u"Connect to VNC"):
             self.sshc.OpenVNCTunnel(localport, port)
-            self.buttonVNC.Label = "Disconnect VNC"
+            self.buttonVNC.Label = _(u"Disconnect VNC")
             if useBuiltIn:
                 from vnc.vncviewer import InternalCall
-                internalVnc = Process(target=InternalCall, args=("localhost", localport, 32))
+                internalVnc = Process(target=InternalCall, args=('localhost', localport, 32))
                 internalVnc.daemon = True
                 internalVnc.start()
             else:
-                subprocess.Popen([RealVNC, "localhost:{0}".format(localport)])
+                subprocess.Popen([RealVNC, 'localhost:{0}'.format(localport)])
         else:
             try:
                 self.sshc.StopTunnel(port)
             except KeyError as key:
                 print(key)
             finally:
-                self.buttonVNC.Label = "Connect to VNC"
+                self.buttonVNC.Label = _(u"Connect to VNC")
 
     def authChoice_onChoose(self, event):  # wxGlade: MainFrame.<event_handler>
         if self.authChoice.GetSelection() == 1:
@@ -294,15 +304,12 @@ class MainFrame(wx.Frame):
             self.Layout()
 
     def Menu_helpLink(self, event):  # wxGlade: MainFrame.<event_handler>
-        tb.OpenALink("https://sshvnc.tdhydro.com/")
+        tb.OpenALink('https://vncssh.tdhydro.com/')
 
     def Menu_setting(self, event):  # wxGlade: MainFrame.<event_handler>
         setting = SettingFrame(self)
         setting.LoadSetting()
         setting.Show()
-
-    def CurrentVersion(self, version):
-        self.version = version
 
     def checkBox_onChange(self, event):  # wxGlade: MainFrame.<event_handler>
         if self.checkBoxShowPswd.IsChecked():
@@ -322,7 +329,14 @@ class MainFrame(wx.Frame):
     def textBoxPwsdShow_PressEnter(self, event):  # wxGlade: MainFrame.<event_handler>
         self.buttonConn_onClick(event)
 
+    def Menu_checkUpdate(self, event):  # wxGlade: MainFrame.<event_handler>
+        updateCheck = AsyncUpdateCheck(self.version, True)
+        updateCheck.start()
 
+
+    def CurrentVersion(self, version):
+        self.version = version
+    
     ##### Tab #####
 
     def textBoxUsr_PressTab(self, event):
@@ -338,6 +352,7 @@ class MainFrame(wx.Frame):
         if key == wx.WXK_TAB:
             self.textBoxUsr.SetFocus()
         event.Skip()
+    
 # end of class MainFrame
 
 
@@ -349,10 +364,16 @@ class AsyncConnectionCheck(threading.Thread):
     def run(self):
         try:
             self.sshc.StartConn()
-            wx.CallAfter(pub.sendMessage,"Connected")
+            wx.CallAfter(pub.sendMessage, 'Connected')
         except NoValidConnectionsError as nce:
-            tb.MBox('Connect to server ' + self.ip + ' failed: \n' + str(nce),'Error', 2)
-            wx.CallAfter(pub.sendMessage,"Fail")
+            tb.MBox(_(u"Connect to server ") + self.ip + _(u" failed: \n") + str(nce),_(u"Error"), 2)
+            wx.CallAfter(pub.sendMessage,'Fail')
         except TimeoutError as te:
-            tb.MBox('Connect to server ' + self.ip + ' failed: \n' + str(te),'Error', 2)
-            wx.CallAfter(pub.sendMessage,"Fail")
+            tb.MBox(_(u"Connect to server ") + self.ip + _(u" failed: \n") + str(te),_(u"Error"), 2)
+            wx.CallAfter(pub.sendMessage,'Fail')
+        except AuthenticationException as ae:
+            tb.MBox(_(u"Connect to server ") + self.ip + _(u" failed: \n") + str(ae),_(u"Error"), 2)
+            wx.CallAfter(pub.sendMessage,'Fail')
+        except Exception as e:
+            tb.MBox(_(u"Connect to server ") + self.ip + _(u" failed: \n") + str(e),_(u"Error"), 2)
+            wx.CallAfter(pub.sendMessage, 'Fail')

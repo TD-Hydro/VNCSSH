@@ -1,0 +1,323 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TD-Hydro\n"
+"POT-Creation-Date: 2019-08-09 01:11-0400\n"
+"PO-Revision-Date: 2019-08-09 01:13-0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.3\n"
+"X-Poedit-Basepath: ../../..\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-SearchPath-0: ui\n"
+"X-Poedit-SearchPath-1: util/update.py\n"
+
+#: ui/AboutDialog.py:21 ui/FilenameDialog.py:21 ui/SettingFrame.py:30
+msgid "OK"
+msgstr "确认"
+
+#: ui/AboutDialog.py:31 ui/MainFrame.py:70
+msgid "About"
+msgstr "关于"
+
+#: ui/AboutDialog.py:41
+msgid "./res/remote.png"
+msgstr "./res/remote.png"
+
+#: ui/AboutDialog.py:53
+#, python-brace-format
+msgid ""
+"VNC over SSH\n"
+"{0} Beta\n"
+"\n"
+"Copyright (C) 2019\n"
+"TD-Hydro"
+msgstr ""
+"VNC over SSH\n"
+"{0} Beta\n"
+"\n"
+"版权 (C) 2019\n"
+"TD-Hydro"
+
+#: ui/FileTransferFrame.py:21 ui/FileTransferFrame.py:25
+msgid "←"
+msgstr ""
+
+#: ui/FileTransferFrame.py:22 ui/FileTransferFrame.py:26
+msgid "↑"
+msgstr ""
+
+#: ui/FileTransferFrame.py:23 ui/FileTransferFrame.py:27
+msgid "⟳"
+msgstr ""
+
+#: ui/FileTransferFrame.py:31
+msgid "Upload"
+msgstr "上传"
+
+#: ui/FileTransferFrame.py:32
+msgid "Download"
+msgstr "下载"
+
+#: ui/FileTransferFrame.py:56
+msgid "File Transfer"
+msgstr "文件传输"
+
+#: ui/FileTransferFrame.py:59 ui/FileTransferFrame.py:64
+msgid "Go back"
+msgstr "返回"
+
+#: ui/FileTransferFrame.py:61 ui/FileTransferFrame.py:66
+msgid "Go up"
+msgstr "上一层"
+
+#: ui/FileTransferFrame.py:69 ui/FileTransferFrame.py:136
+msgid "File"
+msgstr "文件"
+
+#: ui/FileTransferFrame.py:70 ui/FileTransferFrame.py:73
+msgid "Type"
+msgstr "类型"
+
+#: ui/FileTransferFrame.py:72
+msgid "File name"
+msgstr "文件名"
+
+#: ui/FileTransferFrame.py:134 ui/FileTransferFrame.py:194
+#: ui/FileTransferFrame.py:280
+msgid "Folder"
+msgstr "文件夹"
+
+#: ui/FileTransferFrame.py:138
+msgid " file"
+msgstr " 文件"
+
+#: ui/FileTransferFrame.py:166 ui/FileTransferFrame.py:187
+msgid "Permission is denied: "
+msgstr "访问被拒绝： "
+
+#: ui/FileTransferFrame.py:166 ui/FileTransferFrame.py:187 ui/MainFrame.py:214
+#: ui/MainFrame.py:217 ui/MainFrame.py:369 ui/MainFrame.py:372
+#: ui/MainFrame.py:375 ui/MainFrame.py:378
+msgid "Error"
+msgstr "错误"
+
+#: ui/FilenameDialog.py:22 ui/SettingFrame.py:31
+msgid "Cancel"
+msgstr "取消"
+
+#: ui/FilenameDialog.py:30
+msgid "New Key"
+msgstr "新密钥"
+
+#: ui/FilenameDialog.py:40
+msgid "New key file name: "
+msgstr "新密钥名： "
+
+#: ui/MainFrame.py:54
+msgid "Shell\tCtrl+T"
+msgstr "Shell\tCtrl+T"
+
+#: ui/MainFrame.py:56
+msgid "File Transfer\tCtrl+F"
+msgstr "文件传输\tCtrl+F"
+
+#: ui/MainFrame.py:58
+msgid "&Tools"
+msgstr "工具(&T)"
+
+#: ui/MainFrame.py:60
+msgid "Check for Updates..."
+msgstr "检查更新..."
+
+#: ui/MainFrame.py:62
+msgid "E&xit\tAlt+F4"
+msgstr "退出(X)\tAlt+F4"
+
+#: ui/MainFrame.py:64
+msgid "&File"
+msgstr "文件(F)"
+
+#: ui/MainFrame.py:66
+msgid "Help Document\tF1"
+msgstr "帮助文档"
+
+#: ui/MainFrame.py:68 ui/SettingFrame.py:45
+msgid "Settings"
+msgstr "设置"
+
+#: ui/MainFrame.py:72
+msgid "&Help"
+msgstr "帮助(H)"
+
+#: ui/MainFrame.py:78
+msgid "Authentication method:"
+msgstr "认证方式："
+
+#: ui/MainFrame.py:78
+msgid "Password"
+msgstr "密码"
+
+#: ui/MainFrame.py:78
+msgid "Public Key"
+msgstr "公钥"
+
+#: ui/MainFrame.py:79
+msgid "SSH Key File: "
+msgstr "SSH密钥文件： "
+
+#: ui/MainFrame.py:81
+msgid "Add Key"
+msgstr "添加密钥"
+
+#: ui/MainFrame.py:82
+msgid "Password:"
+msgstr "密码："
+
+#: ui/MainFrame.py:85
+msgid "Show Password"
+msgstr "显示密码"
+
+#: ui/MainFrame.py:86 ui/MainFrame.py:207
+msgid "Connect"
+msgstr "连接"
+
+#: ui/MainFrame.py:87 ui/MainFrame.py:268 ui/MainFrame.py:284
+msgid "Connect to VNC"
+msgstr "连接VNC"
+
+#: ui/MainFrame.py:107
+msgid "VNC over SSH"
+msgstr "VNC over SSH"
+
+#: ui/MainFrame.py:112 ui/MainFrame.py:262
+msgid "Not connected"
+msgstr "未连接"
+
+#: ui/MainFrame.py:135
+msgid "IP Address:"
+msgstr "IP地址："
+
+#: ui/MainFrame.py:138
+msgid "Username: "
+msgstr "用户名： "
+
+#: ui/MainFrame.py:163 ui/MainFrame.py:169
+msgid "Sever not connected"
+msgstr "服务器未连接"
+
+#: ui/MainFrame.py:163 ui/MainFrame.py:169
+msgid "Not Connected"
+msgstr "未连接"
+
+#: ui/MainFrame.py:186
+msgid "Open SSH Key File"
+msgstr "打开SSH密钥文件"
+
+#: ui/MainFrame.py:200
+msgid "Name cannot be an empty string"
+msgstr "命名不能为空"
+
+#: ui/MainFrame.py:200
+msgid "Info"
+msgstr "信息"
+
+#: ui/MainFrame.py:204 ui/MainFrame.py:250
+msgid "Disconnect"
+msgstr "断开连接"
+
+#: ui/MainFrame.py:214
+msgid "IP address is illegal"
+msgstr "IP地址不合法"
+
+#: ui/MainFrame.py:217
+msgid "Username cannot be empty"
+msgstr "用户名不能为空"
+
+#: ui/MainFrame.py:231
+msgid "Connecting..."
+msgstr "连接中..."
+
+#: ui/MainFrame.py:251
+msgid "Connected to "
+msgstr "连接至 "
+
+#: ui/MainFrame.py:270
+msgid "Disconnect VNC"
+msgstr "断开VNC连接"
+
+#: ui/MainFrame.py:369 ui/MainFrame.py:372 ui/MainFrame.py:375
+#: ui/MainFrame.py:378
+msgid "Connect to server "
+msgstr "连接至服务器 "
+
+#: ui/MainFrame.py:369 ui/MainFrame.py:372 ui/MainFrame.py:375
+#: ui/MainFrame.py:378
+msgid " failed: \n"
+msgstr " 失败：\n"
+
+#: ui/SettingFrame.py:23
+msgid "Built-in VNC Viewer"
+msgstr "内建 VNC Viewer"
+
+#: ui/SettingFrame.py:24 ui/SettingFrame.py:115
+msgid "RealVNC Viewer"
+msgstr ""
+
+#: ui/SettingFrame.py:26
+msgid "Browse..."
+msgstr "浏览..."
+
+#: ui/SettingFrame.py:29
+msgid "English"
+msgstr "英语"
+
+#: ui/SettingFrame.py:29
+msgid "Chinese (Simplified)"
+msgstr "中文（简体）"
+
+#: ui/SettingFrame.py:29
+msgid "Chinese (Traditional)"
+msgstr "中文（繁体）"
+
+#: ui/SettingFrame.py:71
+msgid "Remote Port:"
+msgstr "远程端口："
+
+#: ui/SettingFrame.py:76
+msgid "Display Language"
+msgstr "显示语言"
+
+#: ui/SettingFrame.py:80
+msgid "VNC Viewer"
+msgstr ""
+
+#: ui/SettingFrame.py:81
+msgid "Language"
+msgstr "语言"
+
+#: ui/SettingFrame.py:115
+msgid "Executable (*.exe)|*.exe"
+msgstr "可执行文件 (*.exe)|*.exe"
+
+#: util/update.py:16
+#, python-brace-format
+msgid "A new version {0} of VNCSSH is avaliable. Download now?"
+msgstr "新版VNCSSH {0} 已发布.。现在下载吗？"
+
+#: util/update.py:16 util/update.py:21
+msgid "Update"
+msgstr "更新"
+
+#: util/update.py:21
+msgid "Your VNCSSH is up to date."
+msgstr "此VNCSSH已是最新版。"
+
+#~ msgid "Connected"
+#~ msgstr "已连接"
+
+#~ msgid "Fail"
+#~ msgstr "失败"

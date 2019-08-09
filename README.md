@@ -1,4 +1,4 @@
-# SSHVNC
+# VNCSSH
 ## VNC over SSH and many more
 
 A GUI program for easy control of your remote host/cloud with VNC through SSH.
@@ -62,19 +62,19 @@ wx, paramiko, pygame, twisted
 ```
 You can use
 ```
-pip3 install wx paramiko pygame twisted
+pip3 install wxpython paramiko pygame twisted
 ```
 to install these packages. If you cannot install twisted, check [this](https://www.lfd.uci.edu/~gohlke/pythonlibs/).
 
 Use command:
 ```
-python3 sshvnc.py
+python3 vncssh.py
 ```
 This will start the user interfaces.
 
 
 ### Binaries
-Download installation or binary files [here](https://github.com/TD-Hydro/SSHVNC/releases).
+Download installation or binary files [here](https://github.com/TD-Hydro/VNCSSH/releases).
 
 If you want to use zip packets in Windows, make sure you install the Microsoft Visual C++ Redistributable 2015 or 2017 (x86/x64, depending on your system and download packets).
 

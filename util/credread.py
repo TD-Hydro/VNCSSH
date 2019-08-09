@@ -4,7 +4,7 @@ import os
 import json
 
 def GetAppData():
-    return os.environ["LOCALAPPDATA"] + "\\SSHVNCP\\"
+    return os.environ["LOCALAPPDATA"] + "\\VNCSSH\\"
 
 def FindKey():
     config = ConfigParser()

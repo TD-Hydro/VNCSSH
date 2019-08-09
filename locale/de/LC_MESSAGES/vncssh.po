@@ -1,0 +1,306 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TD-Hydro\n"
+"POT-Creation-Date: 2019-04-07 02:29-0400\n"
+"PO-Revision-Date: 2019-06-30 00:12-0400\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ../../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language: de\n"
+"X-Poedit-SearchPath-0: ui\n"
+"X-Poedit-SearchPath-1: util/update.py\n"
+
+#: ui/AboutDialog.py:21 ui/FilenameDialog.py:21 ui/SettingFrame.py:30
+msgid "OK"
+msgstr ""
+
+#: ui/AboutDialog.py:31 ui/MainFrame.py:70
+msgid "About"
+msgstr "Über"
+
+#: ui/AboutDialog.py:41
+msgid "./res/remote.png"
+msgstr ""
+
+#: ui/AboutDialog.py:53
+#, python-brace-format
+msgid ""
+"VNC over SSH\n"
+"{0} Beta\n"
+"\n"
+"Copyright (C) 2019\n"
+"TD-Hydro"
+msgstr ""
+
+#: ui/FileTransferFrame.py:31
+msgid "Upload"
+msgstr "Hochladen"
+
+#: ui/FileTransferFrame.py:32
+msgid "Download"
+msgstr ""
+
+#: ui/FileTransferFrame.py:56
+msgid "File Transfer"
+msgstr ""
+
+#: ui/FileTransferFrame.py:59 ui/FileTransferFrame.py:64
+msgid "Go back"
+msgstr ""
+
+#: ui/FileTransferFrame.py:61 ui/FileTransferFrame.py:66
+msgid "Go up"
+msgstr ""
+
+#: ui/FileTransferFrame.py:69 ui/FileTransferFrame.py:136
+msgid "File"
+msgstr ""
+
+#: ui/FileTransferFrame.py:70 ui/FileTransferFrame.py:73
+msgid "Type"
+msgstr ""
+
+#: ui/FileTransferFrame.py:72
+msgid "File name"
+msgstr ""
+
+#: ui/FileTransferFrame.py:134 ui/FileTransferFrame.py:194
+#: ui/FileTransferFrame.py:280
+msgid "Folder"
+msgstr ""
+
+#: ui/FileTransferFrame.py:138
+msgid " file"
+msgstr ""
+
+#: ui/FileTransferFrame.py:166 ui/FileTransferFrame.py:187
+msgid "Permission is denied: "
+msgstr ""
+
+#: ui/FileTransferFrame.py:166 ui/FileTransferFrame.py:187 ui/MainFrame.py:214
+#: ui/MainFrame.py:217 ui/MainFrame.py:369 ui/MainFrame.py:372
+#: ui/MainFrame.py:375 ui/MainFrame.py:378
+msgid "Error"
+msgstr ""
+
+#: ui/FilenameDialog.py:22 ui/SettingFrame.py:31
+msgid "Cancel"
+msgstr ""
+
+#: ui/FilenameDialog.py:30
+msgid "New Key"
+msgstr ""
+
+#: ui/FilenameDialog.py:40
+msgid "New key file name: "
+msgstr ""
+
+#: ui/MainFrame.py:54
+msgid "Shell\tCtrl+T"
+msgstr ""
+
+#: ui/MainFrame.py:56
+msgid "File Transfer\tCtrl+F"
+msgstr ""
+
+#: ui/MainFrame.py:58
+msgid "&Tools"
+msgstr ""
+
+#: ui/MainFrame.py:60
+msgid "Check for Updates..."
+msgstr ""
+
+#: ui/MainFrame.py:62
+msgid "E&xit\tAlt+F4"
+msgstr ""
+
+#: ui/MainFrame.py:64
+msgid "&File"
+msgstr "Datai(&F)"
+
+#: ui/MainFrame.py:66
+msgid "Help Document\tF1"
+msgstr ""
+
+#: ui/MainFrame.py:68 ui/SettingFrame.py:45
+msgid "Settings"
+msgstr ""
+
+#: ui/MainFrame.py:72
+msgid "&Help"
+msgstr "&Hilfe"
+
+#: ui/MainFrame.py:78
+msgid "Authentication method:"
+msgstr ""
+
+#: ui/MainFrame.py:78
+msgid "Password"
+msgstr "Passwort"
+
+#: ui/MainFrame.py:78
+msgid "Public Key"
+msgstr ""
+
+#: ui/MainFrame.py:79
+msgid "SSH Key File: "
+msgstr ""
+
+#: ui/MainFrame.py:81
+msgid "Add Key"
+msgstr ""
+
+#: ui/MainFrame.py:82
+msgid "Password:"
+msgstr "Passwort:"
+
+#: ui/MainFrame.py:85
+msgid "Show Password"
+msgstr ""
+
+#: ui/MainFrame.py:86 ui/MainFrame.py:207
+msgid "Connect"
+msgstr ""
+
+#: ui/MainFrame.py:87 ui/MainFrame.py:268 ui/MainFrame.py:284
+msgid "Connect to VNC"
+msgstr ""
+
+#: ui/MainFrame.py:107
+msgid "VNC over SSH"
+msgstr ""
+
+#: ui/MainFrame.py:112 ui/MainFrame.py:262
+msgid "Not connected"
+msgstr ""
+
+#: ui/MainFrame.py:135
+msgid "IP Address:"
+msgstr "IP Adresse:"
+
+#: ui/MainFrame.py:138
+msgid "Username: "
+msgstr "Benutzername: "
+
+#: ui/MainFrame.py:163 ui/MainFrame.py:169
+msgid "Sever not connected"
+msgstr ""
+
+#: ui/MainFrame.py:163 ui/MainFrame.py:169
+msgid "Not Connected"
+msgstr ""
+
+#: ui/MainFrame.py:186
+msgid "Open SSH Key File"
+msgstr ""
+
+#: ui/MainFrame.py:200
+msgid "Name cannot be an empty string"
+msgstr ""
+
+#: ui/MainFrame.py:200
+msgid "Info"
+msgstr ""
+
+#: ui/MainFrame.py:204 ui/MainFrame.py:250
+msgid "Disconnect"
+msgstr ""
+
+#: ui/MainFrame.py:214
+msgid "IP address is illegal"
+msgstr ""
+
+#: ui/MainFrame.py:217
+msgid "Username cannot be empty"
+msgstr ""
+
+#: ui/MainFrame.py:231
+msgid "Connecting..."
+msgstr ""
+
+#: ui/MainFrame.py:251
+msgid "Connected to "
+msgstr ""
+
+#: ui/MainFrame.py:270
+msgid "Disconnect VNC"
+msgstr ""
+
+#: ui/MainFrame.py:369 ui/MainFrame.py:372 ui/MainFrame.py:375
+#: ui/MainFrame.py:378
+msgid "Connect to server "
+msgstr ""
+
+#: ui/MainFrame.py:369 ui/MainFrame.py:372 ui/MainFrame.py:375
+#: ui/MainFrame.py:378
+msgid " failed: \n"
+msgstr ""
+
+#: ui/SettingFrame.py:23
+msgid "Built-in VNC Viewer"
+msgstr ""
+
+#: ui/SettingFrame.py:24 ui/SettingFrame.py:115
+msgid "RealVNC Viewer"
+msgstr ""
+
+#: ui/SettingFrame.py:26
+msgid "Browse..."
+msgstr ""
+
+#: ui/SettingFrame.py:29
+msgid "English"
+msgstr ""
+
+#: ui/SettingFrame.py:29
+msgid "Chinese (Simplified)"
+msgstr ""
+
+#: ui/SettingFrame.py:29
+msgid "Chinese (Traditional)"
+msgstr ""
+
+#: ui/SettingFrame.py:71
+msgid "Remote Port:"
+msgstr ""
+
+#: ui/SettingFrame.py:76
+msgid "Display Language"
+msgstr ""
+
+#: ui/SettingFrame.py:80
+msgid "VNC Viewer"
+msgstr ""
+
+#: ui/SettingFrame.py:81
+msgid "Language"
+msgstr ""
+
+#: ui/SettingFrame.py:115
+msgid "Executable (*.exe)|*.exe"
+msgstr ""
+
+#: util/update.py:16
+#, python-brace-format
+msgid "A new version {0} of SSHVNC is avaliable. Download now?"
+msgstr ""
+
+#: util/update.py:16 util/update.py:21
+msgid "Update"
+msgstr ""
+
+#: util/update.py:21
+msgid "Your SSHVNC is up to date."
+msgstr ""
+
+msgid "Connected"
+msgstr "已連接"
+
+msgid "Fail"
+msgstr "失敗"
