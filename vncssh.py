@@ -47,6 +47,7 @@ if __name__ == '__main__':
     if not os.path.exists(appdataAppName + '\\settings.ini'):
         open(appdataAppName + '\\settings.ini', 'a').close()
     util.toolBox.CheckAndAddSetting('vnc',[('local','1'), ('realpath',''), ('remoteport','5901')])
+    util.toolBox.CheckAndAddSetting('language',[('language','0')])
 
     # Check version
     appVersion = "0.3.3"
