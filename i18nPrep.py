@@ -39,7 +39,7 @@ def ReverseFile(fileName):
 
     for l in f:
         l = l.replace("\")\r\n","\"\r\n")
-        #l = l.replace("\"):","\")):")
+        l = l.replace("\"):","\":")
         l = l.replace("_(u\"","\"")
         l = l.replace("\")","\"")
 

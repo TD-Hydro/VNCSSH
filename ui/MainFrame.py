@@ -161,13 +161,13 @@ class MainFrame(wx.Frame):
 
     def Menu_shell(self, event):  # wxGlade: MainFrame.<event_handler>
         if self.sshc == None:
-            tb.MBox(_(u_(u_(u"Sever not connected"))), _(u_(u_(u"Not Connected"))), 2)
+            tb.MBox(_(u"Sever not connected"), _(u"Not Connected"), 2)
         else:
             self.sshc.OpenTerminal()
         
     def Menu_filetrans(self, event):  # wxGlade: MainFrame.<event_handler>
         if self.sshc == None:
-            tb.MBox(_(u_(u_(u"Sever not connected"))), _(u_(u_(u"Not Connected"))), 2)
+            tb.MBox(_(u"Sever not connected"), _(u"Not Connected"), 2)
         else:
             self.sshc.StartConn()
             fd = FileTransferFrame(self)
@@ -184,7 +184,7 @@ class MainFrame(wx.Frame):
         
 
     def buttonKeyFile_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
-        fileDialog = wx.FileDialog(self, _(u_(u_(u"Open SSH Key File"))), wildcard='SSH key (*.pem)|*.pem', style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        fileDialog = wx.FileDialog(self, _(u"Open SSH Key File"), wildcard='SSH key (*.pem)|*.pem', style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         fileDialog.ShowModal()
         pathname = fileDialog.GetPath()
         fileDialog.Destroy()
@@ -198,24 +198,24 @@ class MainFrame(wx.Frame):
                         self.choiceKey.Append(newkeypath)
                 else:
                     wx.MessageDialog(
-                        None, _(u_(u_(u"Name cannot be an empty string"))), _(u_(u_(u"Info"))), wx.OK).ShowModal()
+                        None, _(u"Name cannot be an empty string"), _(u"Info"), wx.OK).ShowModal()
             newKeyDialog.Destroy()
 
     def buttonConn_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
-        if self.buttonConn.GetLabel() == _(u_(u_(u"Disconnect"))):
+        if self.buttonConn.GetLabel() == _(u"Disconnect"):
             if self.sshc != None:
                 self.sshc = None
-            self.buttonConn.SetLabel(_(u_(u_(u"Connect"))))
+            self.buttonConn.SetLabel(_(u"Connect"))
             self.buttonVNC.Disable()
             self.EnableInfomationChange()
             return
 
         # using domain is allowed
         if self.comboBoxIP.Value == '':
-            tb.MBox(_(u_(u_(u"IP address is illegal"))), _(u_(u_(u"Error"))), 2)
+            tb.MBox(_(u"IP address is illegal"), _(u"Error"), 2)
             return
         if self.textBoxUsr.Value == '':
-            tb.MBox(_(u_(u_(u"Username cannot be empty"))), _(u_(u_(u"Error"))), 2)
+            tb.MBox(_(u"Username cannot be empty"), _(u"Error"), 2)
             return
         self.buttonConn.Disable()
         self.comboBoxIP.Disable()
@@ -229,7 +229,7 @@ class MainFrame(wx.Frame):
         # make sure the password is copied
         if self.checkBoxShowPswd.IsChecked():
             self.textBoxPswd.Value = self.textBoxPswdShow.Value
-        self.frame_statusbar.SetStatusText(_(u_(u_(u"Connecting..."))))
+        self.frame_statusbar.SetStatusText(_(u"Connecting..."))
 
         keyfile = None
         if self.authChoice.GetSelection() == 1:
@@ -248,8 +248,8 @@ class MainFrame(wx.Frame):
         self.sshc.CloseConn()
         self.buttonVNC.Enable()
         self.buttonConn.Enable()
-        self.buttonConn.SetLabel(_(u_(u_(u"Disconnect"))))
-        self.frame_statusbar.SetStatusText(_(u_(u_(u"Connected to "))) + self.comboBoxIP.Value)
+        self.buttonConn.SetLabel(_(u"Disconnect"))
+        self.frame_statusbar.SetStatusText(_(u"Connected to ") + self.comboBoxIP.Value)
 
     def EnableInfomationChange(self):
         self.comboBoxIP.Enable()
@@ -260,15 +260,15 @@ class MainFrame(wx.Frame):
         self.choiceKey.Enable()
         self.authChoice.Enable()
         self.buttonConn.Enable()
-        self.frame_statusbar.SetStatusText(_(u_(u_(u"Not connected"))))
+        self.frame_statusbar.SetStatusText(_(u"Not connected"))
 
     def buttonVNC_onClick(self, event):  # wxGlade: MainFrame.<event_handler>
         localport = 5901
         useBuiltIn, RealVNC, portString = util.settingread.GetVNCSetting()
         port = int(portString)
-        if self.buttonVNC.Label == _(u_(u_(u"Connect to VNC"))):
+        if self.buttonVNC.Label == _(u"Connect to VNC"):
             self.sshc.OpenVNCTunnel(localport, port)
-            self.buttonVNC.Label = _(u_(u_(u"Disconnect VNC")))
+            self.buttonVNC.Label = _(u"Disconnect VNC")
             if useBuiltIn:
                 from vnc.vncviewer import InternalCall
                 internalVnc = Process(target=InternalCall, args=('localhost', localport, 32))
@@ -282,7 +282,7 @@ class MainFrame(wx.Frame):
             except KeyError as key:
                 print(key)
             finally:
-                self.buttonVNC.Label = _(u_(u_(u"Connect to VNC")))
+                self.buttonVNC.Label = _(u"Connect to VNC")
 
     def authChoice_onChoose(self, event):  # wxGlade: MainFrame.<event_handler>
         if self.authChoice.GetSelection() == 1:
@@ -367,14 +367,14 @@ class AsyncConnectionCheck(threading.Thread):
             self.sshc.StartConn()
             wx.CallAfter(pub.sendMessage, 'Connected')
         except NoValidConnectionsError as nce:
-            tb.MBox(_(u_(u_(u"Connect to server "))) + self.ip + _(u_(u_(u" failed: \n"))) + str(nce),_(u_(u_(u"Error"))), 2)
+            tb.MBox(_(u"Connect to server ") + self.ip + _(u" failed: \n") + str(nce),_(u"Error"), 2)
             wx.CallAfter(pub.sendMessage,'Fail')
         except TimeoutError as te:
-            tb.MBox(_(u_(u_(u"Connect to server "))) + self.ip + _(u_(u_(u" failed: \n"))) + str(te),_(u_(u_(u"Error"))), 2)
+            tb.MBox(_(u"Connect to server ") + self.ip + _(u" failed: \n") + str(te),_(u"Error"), 2)
             wx.CallAfter(pub.sendMessage,'Fail')
         except AuthenticationException as ae:
-            tb.MBox(_(u_(u_(u"Connect to server "))) + self.ip + _(u_(u_(u" failed: \n"))) + str(ae),_(u_(u_(u"Error"))), 2)
+            tb.MBox(_(u"Connect to server ") + self.ip + _(u" failed: \n") + str(ae),_(u"Error"), 2)
             wx.CallAfter(pub.sendMessage,'Fail')
         except Exception as e:
-            tb.MBox(_(u_(u_(u"Connect to server "))) + self.ip + _(u_(u_(u" failed: \n"))) + str(e),_(u_(u_(u"Error"))), 2)
+            tb.MBox(_(u"Connect to server ") + self.ip + _(u" failed: \n") + str(e),_(u"Error"), 2)
             wx.CallAfter(pub.sendMessage, 'Fail')
