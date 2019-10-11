@@ -31,8 +31,9 @@ from wx.lib.pubsub import pub
 class MainFrame(wx.Frame):
     def __init__(self, *args, **kwds):
         ### Internationalization ###
-        
-        self.locale = wx.Locale(wx.LANGUAGE_ENGLISH)
+        # Language dictionary
+        lang = [wx.LANGUAGE_ENGLISH, wx.LANGUAGE_CHINESE_SIMPLIFIED, wx.LANGUAGE_CHINESE_TRADITIONAL]
+        self.locale = wx.Locale(lang[int(util.settingread.GetLangSetting())])
         if self.locale.IsOk():
             self.locale.AddCatalogLookupPathPrefix('locale')
             self.locale.AddCatalog('vncssh')

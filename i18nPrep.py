@@ -1,7 +1,7 @@
 import sys
 
 def ChangeFile(fileName):
-    f = open(fileName, "r")
+    f = open(fileName, "r", encoding="utf-8")
 
     lines = []
 
@@ -10,6 +10,8 @@ def ChangeFile(fileName):
         if len(lx) == 1:
             nl = l
         elif lx[1] == "style":
+            nl = l
+        elif lx[0][-1] == "u":
             nl = l
         else:
             nl = lx[0]
@@ -37,7 +39,7 @@ def ReverseFile(fileName):
 
     for l in f:
         l = l.replace("\")\r\n","\"\r\n")
-        #l = l.replace("\"):","\")):")
+        l = l.replace("\"):","\":")
         l = l.replace("_(u\"","\"")
         l = l.replace("\")","\"")
 
@@ -57,7 +59,7 @@ if len(sys.argv) >= 3:
 elif len(sys.argv) == 2:
     if sys.argv[1] == "replace":
         ChangeFile("ui/MainFrame.py")
-        ChangeFile("ui/FileTransferFrame.py")
+        #ChangeFile("ui/FileTransferFrame.py")
         ChangeFile("ui/FileNameDialog.py")
         ChangeFile("ui/AboutDialog.py")
         ChangeFile("ui/SettingFrame.py")

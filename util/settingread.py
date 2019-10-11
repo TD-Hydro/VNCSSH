@@ -15,6 +15,12 @@ def GetVNCSetting():
     port = config.get('vnc','remoteport')
     return local, realVNCPath, port
 
+def GetLangSetting():
+    config = ConfigParser()
+    config.read(GetAppData()+"settings.ini")
+    language = config.get('language','language')
+    return language
+
 def SetVNCSetting(localMark,realPath,port):
     config = ConfigParser()
     config.read(GetAppData()+"settings.ini")
@@ -24,3 +30,9 @@ def SetVNCSetting(localMark,realPath,port):
     with open(GetAppData()+"settings.ini", 'w') as configfile:
         config.write(configfile)
     
+def SetLangSetting(langNum):
+        config = ConfigParser()
+        config.read(GetAppData()+"settings.ini")
+        config['language']['language'] = str(langNum)
+        with open(GetAppData()+"settings.ini", 'w') as configfile:
+                config.write(configfile)

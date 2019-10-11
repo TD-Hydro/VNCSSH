@@ -26,7 +26,7 @@ class SettingFrame(wx.Frame):
         self.buttonVNCPath = wx.Button(self.panel_1, wx.ID_ANY, _(u"Browse..."))
         self.textCtrlRemotePort = wx.TextCtrl(self.panel_1, wx.ID_ANY, _(u""))
         self.notebook_1_Language = wx.Panel(self.notebook_1, wx.ID_ANY)
-        self.choice_1 = wx.Choice(self.notebook_1_Language, wx.ID_ANY, choices=[_(u"English"), _(u"Chinese (Simplified)"), _(u"Chinese (Traditional)")])
+        self.choiceLanguage = wx.Choice(self.notebook_1_Language, wx.ID_ANY, choices=[_(u"English"), _(u"Chinese (Simplified)"), _(u"Chinese (Traditional)")])
         self.buttonOK = wx.Button(self, wx.ID_ANY, _(u"OK"))
         self.buttonCancel = wx.Button(self, wx.ID_ANY, _(u"Cancel"))
 
@@ -47,13 +47,15 @@ class SettingFrame(wx.Frame):
         self.textCtrlVNCPath.SetMinSize((200, 28))
         self.buttonVNCPath.SetMinSize((88, 28))
         self.textCtrlRemotePort.SetMinSize((70, 28))
-        self.choice_1.SetSelection(0)
+        self.choiceLanguage.SetSelection(0)
         self.notebook_1.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         # end wxGlade
 
         # Windows icon attachment 
         icon = wx.Icon(wx.IconLocation('./res/remote.ico'))
         self.SetIcon(icon)
+
+        
 
     def __do_layout(self):
         # begin wxGlade: SettingFrame.__do_layout
@@ -75,7 +77,7 @@ class SettingFrame(wx.Frame):
         self.panel_1.SetSizer(sizer_11)
         label_2 = wx.StaticText(self.notebook_1_Language, wx.ID_ANY, _(u"Display Language"))
         sizer_18.Add(label_2, 0, wx.ALL, 9)
-        sizer_18.Add(self.choice_1, 0, wx.ALL, 5)
+        sizer_18.Add(self.choiceLanguage, 0, wx.ALL, 5)
         self.notebook_1_Language.SetSizer(sizer_18)
         self.notebook_1.AddPage(self.panel_1, _(u"VNC Viewer"))
         self.notebook_1.AddPage(self.notebook_1_Language, _(u"Language"))
@@ -90,6 +92,7 @@ class SettingFrame(wx.Frame):
 
     def LoadSetting(self):
         local, real, port = util.settingread.GetVNCSetting()
+        lang = int(util.settingread.GetLangSetting())
         if local:
             self.radioBuiltInVNC.SetValue(True)
             self.radioRealVNC.SetValue(False)
@@ -102,6 +105,7 @@ class SettingFrame(wx.Frame):
             self.textCtrlVNCPath.Enable()
         self.textCtrlVNCPath.SetValue(real)
         self.textCtrlRemotePort.SetValue(port)
+        self.choiceLanguage.SetSelection(lang)
 
     def radioBuiltInVNC_selected(self, event):  # wxGlade: SettingFrame.<event_handler>
         self.buttonVNCPath.Disable()
@@ -120,6 +124,7 @@ class SettingFrame(wx.Frame):
 
     def buttonOK_onClick(self, event):  # wxGlade: SettingFrame.<event_handler>
         util.settingread.SetVNCSetting(self.radioBuiltInVNC.GetValue(), self.textCtrlVNCPath.GetValue(), self.textCtrlRemotePort.GetValue())
+        util.settingread.SetLangSetting(self.choiceLanguage.GetSelection())
         self.Destroy()
 
     def buttonCancel_onClick(self, event):  # wxGlade: SettingFrame.<event_handler>
