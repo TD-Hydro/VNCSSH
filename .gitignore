@@ -120,4 +120,4 @@ ui/res/*
 setup.py
 
 innoscript.iss
-test.py
+test*.py

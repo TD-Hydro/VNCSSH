@@ -38,9 +38,9 @@ The program comes with a simple file transfer using SFTP. For now, this is the o
 ### VNC Viewer
 
 There does exist a python based [viewer](https://github.com/TD-Hydro/python-vnc-viewer) 
-that can achieve basic tasks. However, the efficiency and functionalities are not as good as the RealVNC® VNC Viewer. The program, however, does support user to use RealVNC® VNC Viewer of there own.
+that can achieve basic tasks and is the **default** VNC viewer offered. However, the efficiency and functionalities are not as good as the RealVNC® VNC Viewer. The program, however, does support both python based VNC viewer and RealVNC® VNC Viewer from users.
 
-Due to the copyright and license issue, I cannot offer RealVNC Viewer binary files. You need to download or purchase RealVNC Viewer based on your situations (personal and commercial). You can download if from [here](https://www.realvnc.com/en/connect/download/viewer/).
+Due to the copyright and license issues, I cannot offer RealVNC Viewer binary files. You need to download or purchase RealVNC Viewer based on your situations (personal and commercial). You can download it from [here](https://www.realvnc.com/en/connect/download/viewer/).
 
 RealVNC® VNC Viewer is not a freeware. RealVNC®, VNC® and RFB® are trademarks of RealVNC® Limited.
 
@@ -50,7 +50,7 @@ Windows 7 and above are required.
 
 Python 3.5 and above is needed if using the source code. Python 2 is not supported.
 
-Linux and Mac support are under development. (Actually, if you are using linux, I do not think this is for you. Terminal is much better than this. Anyhow, I will still work on this.)
+Linux and Mac version are under development. (Actually, if you are using linux, I do not think this is for you. Terminal is much better than this. Anyhow, I will still work on this.)
 
 ## How to use
 
@@ -58,15 +58,15 @@ Linux and Mac support are under development. (Actually, if you are using linux, 
 
 First, install required package.
 ```
-wx, paramiko, pygame, twisted
+wxpython, paramiko, pygame, twisted
 ```
 You can use
 ```
 pip3 install wxpython paramiko pygame twisted
 ```
-to install these packages. If you cannot install twisted, check [this](https://www.lfd.uci.edu/~gohlke/pythonlibs/).
+to install these packages. If you cannot install twisted, please check [this](https://www.lfd.uci.edu/~gohlke/pythonlibs/).
 
-Use command:
+Use command
 ```
 python3 vncssh.py
 ```
@@ -82,7 +82,7 @@ If you want to use zip packets in Windows, make sure you install the Microsoft V
 
 
 ### Known issues
-Repeating password for powershell
+Repeating password for powershell. The SSH key management is an optional software and needs install independently. It is not easy to detect if the SSH key management related tools are installed.
 
 
 ### Using
@@ -91,4 +91,4 @@ To bo done
 
 ## License
 
-Released under the MIT License.
+Released under the LGPL License.

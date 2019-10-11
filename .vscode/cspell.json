@@ -17,6 +17,7 @@
         "ipad",
         "isdir",
         "isfile",
+        "lgpl",
         "mkdir",
         "name",
         "numpy",
