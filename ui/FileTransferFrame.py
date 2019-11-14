@@ -18,18 +18,18 @@ class FileTransferFrame(wx.Frame):
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
         self.SetSize((800, 600))
-        self.buttonLocalBack = wx.Button(self, wx.ID_ANY, _(u"\u2190"))
-        self.buttonLocalUp = wx.Button(self, wx.ID_ANY, _(u"\u2191"))
-        self.buttonLocalRefresh = wx.Button(self, wx.ID_ANY, _(u"\u27f3"))
-        self.textLocalDir = wx.TextCtrl(self, wx.ID_ANY, _(u""))
-        self.buttonRemoteBack = wx.Button(self, wx.ID_ANY, _(u"\u2190"))
-        self.buttonRemoteUp = wx.Button(self, wx.ID_ANY, _(u"\u2191"))
-        self.buttonRemoteRefresh = wx.Button(self, wx.ID_ANY, _(u"\u27f3"))
-        self.textRemoteDir = wx.TextCtrl(self, wx.ID_ANY, _(u""))
+        self.buttonLocalBack = wx.Button(self, wx.ID_ANY, "\\u2190")
+        self.buttonLocalUp = wx.Button(self, wx.ID_ANY, "\\u2191")
+        self.buttonLocalRefresh = wx.Button(self, wx.ID_ANY, "\\u27f3")
+        self.textLocalDir = wx.TextCtrl(self, wx.ID_ANY, "")
+        self.buttonRemoteBack = wx.Button(self, wx.ID_ANY, "\\u2190")
+        self.buttonRemoteUp = wx.Button(self, wx.ID_ANY, "\\u2191")
+        self.buttonRemoteRefresh = wx.Button(self, wx.ID_ANY, "\\u27f3")
+        self.textRemoteDir = wx.TextCtrl(self, wx.ID_ANY, "")
         self.listLocalDir = wx.ListCtrl(self, wx.ID_ANY, style=wx.LC_REPORT)
         self.listRemoteDir = wx.ListCtrl(self, wx.ID_ANY, style=wx.LC_REPORT)
-        self.buttonUpload = wx.Button(self, wx.ID_ANY, _(u"Upload"))
-        self.buttonDownload = wx.Button(self, wx.ID_ANY, _(u"Download"))
+        self.buttonUpload = wx.Button(self, wx.ID_ANY, "Upload")
+        self.buttonDownload = wx.Button(self, wx.ID_ANY, "Download")
         self.progressBar = wx.Gauge(self, wx.ID_ANY, 1)
 
         self.__set_properties()
@@ -53,24 +53,24 @@ class FileTransferFrame(wx.Frame):
 
     def __set_properties(self):
         # begin wxGlade: FileTransferFrame.__set_properties
-        self.SetTitle(_(u"File Transfer"))
+        self.SetTitle("File Transfer")
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.buttonLocalBack.SetMinSize((35, 35))
-        self.buttonLocalBack.SetToolTip(_(u"Go back"))
+        self.buttonLocalBack.SetToolTip("Go back")
         self.buttonLocalUp.SetMinSize((35, 35))
-        self.buttonLocalUp.SetToolTip(_(u"Go up"))
+        self.buttonLocalUp.SetToolTip("Go up")
         self.buttonLocalRefresh.SetMinSize((35, 35))
         self.buttonRemoteBack.SetMinSize((35, 35))
-        self.buttonRemoteBack.SetToolTip(_(u"Go back"))
+        self.buttonRemoteBack.SetToolTip("Go back")
         self.buttonRemoteUp.SetMinSize((35, 35))
-        self.buttonRemoteUp.SetToolTip(_(u"Go up"))
+        self.buttonRemoteUp.SetToolTip("Go up")
         self.buttonRemoteRefresh.SetMinSize((35, 35))
-        self.listLocalDir.AppendColumn(_(u""), format=wx.LIST_FORMAT_LEFT, width=30)
-        self.listLocalDir.AppendColumn(_(u"File"), format=wx.LIST_FORMAT_LEFT, width=-1)
-        self.listLocalDir.AppendColumn(_(u"Type"), format=wx.LIST_FORMAT_LEFT, width=-1)
-        self.listRemoteDir.AppendColumn(_(u""), format=wx.LIST_FORMAT_LEFT, width=30)
-        self.listRemoteDir.AppendColumn(_(u"File name"), format=wx.LIST_FORMAT_LEFT, width=-1)
-        self.listRemoteDir.AppendColumn(_(u"Type"), format=wx.LIST_FORMAT_LEFT, width=-1)
+        self.listLocalDir.AppendColumn("", format=wx.LIST_FORMAT_LEFT, width=30)
+        self.listLocalDir.AppendColumn("File", format=wx.LIST_FORMAT_LEFT, width=-1)
+        self.listLocalDir.AppendColumn("Type", format=wx.LIST_FORMAT_LEFT, width=-1)
+        self.listRemoteDir.AppendColumn("", format=wx.LIST_FORMAT_LEFT, width=30)
+        self.listRemoteDir.AppendColumn("File name", format=wx.LIST_FORMAT_LEFT, width=-1)
+        self.listRemoteDir.AppendColumn("Type", format=wx.LIST_FORMAT_LEFT, width=-1)
         # end wxGlade
 
         # Windows icon attachment 
@@ -131,11 +131,11 @@ class FileTransferFrame(wx.Frame):
     def GetDirStructure(self, pathFolder, pathFile):
         dirList = []
         for f1 in pathFolder:
-            dirList.append(('\U0001f4c1', f1, _(u"Folder")))
+            dirList.append(('\U0001f4c1', f1, "Folder"))
         for f2 in pathFile:
-            dt = _(u"File")
+            dt = "File"
             if len(f2.split('.')) > 1:
-                dt = f2.split('.')[-1].upper() + _(u" file")
+                dt = f2.split('.')[-1].upper() + " file"
             dirList.append(('\U0001f5cb', f2, dt))
         return dirList
 
@@ -163,7 +163,7 @@ class FileTransferFrame(wx.Frame):
                 self.listLocalDir.Append(d)
         except PermissionError:
             dial = wx.MessageDialog(
-                None, _(u"Permission is denied: ") + path , _(u"Error"), wx.OK | wx.ICON_ERROR)
+                None, "Permission is denied: " + path , "Error", wx.OK | wx.ICON_ERROR)
             dial.ShowModal()
             
         finally:
@@ -184,14 +184,14 @@ class FileTransferFrame(wx.Frame):
                 self.listRemoteDir.Append(d)
         except PermissionError:
             dial = wx.MessageDialog(
-                None, _(u"Permission is denied: ") + path , _(u"Error"), wx.OK | wx.ICON_ERROR)
+                None, "Permission is denied: " + path , "Error", wx.OK | wx.ICON_ERROR)
             dial.ShowModal()
         finally:
             self.textRemoteDir.Value = path
 
     def listLocalDir_onClick(self, event): # wxGlade: FileTransferFrame.<event_handler>
         dirType = self.listLocalDir.GetItem(event.GetIndex(), 2).GetText()
-        if dirType == _(u"Folder"):
+        if dirType == "Folder":
             if self.pathHistory[-1] != '\\':
                 path = self.pathHistory[-1] + \
                     self.listLocalDir.GetItem(
@@ -277,7 +277,7 @@ class FileTransferFrame(wx.Frame):
 
     def listRemoteDir_onClick(self, event): # wxGlade: FileTransferFrame.<event_handler>
         dirType = self.listRemoteDir.GetItem(event.GetIndex(), 2).GetText()
-        if dirType == _(u"Folder"):
+        if dirType == "Folder":
             path = self.remotePathHistory[-1] + \
                 self.listRemoteDir.GetItem(event.GetIndex(), 1).GetText() + '/'
             self.ShowRemoteDir(path)

@@ -17,9 +17,9 @@ class FilenameDialog(wx.Dialog):
         kwds["style"] = kwds.get("style", 0) | wx.CAPTION | wx.SYSTEM_MENU
         wx.Dialog.__init__(self, *args, **kwds)
         self.SetSize((300, 120))
-        self.dTextName = wx.TextCtrl(self, wx.ID_ANY, _(u""))
-        self.dButtonOK = wx.Button(self, wx.ID_OK, _(u"OK"))
-        self.dButtonCancel = wx.Button(self, wx.ID_CANCEL, _(u"Cancel"))
+        self.dTextName = wx.TextCtrl(self, wx.ID_ANY, "")
+        self.dButtonOK = wx.Button(self, wx.ID_OK, "OK")
+        self.dButtonCancel = wx.Button(self, wx.ID_CANCEL, "Cancel")
 
         self.__set_properties()
         self.__do_layout()
@@ -27,7 +27,7 @@ class FilenameDialog(wx.Dialog):
 
     def __set_properties(self):
         # begin wxGlade: FilenameDialog.__set_properties
-        self.SetTitle(_(u"New Key"))
+        self.SetTitle("New Key")
         self.SetSize((300, 120))
         self.dTextName.SetMinSize((120, 30))
         # end wxGlade
@@ -37,7 +37,7 @@ class FilenameDialog(wx.Dialog):
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_10 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
-        dLabelName = wx.StaticText(self, wx.ID_ANY, _(u"New key file name: "), style=wx.ALIGN_RIGHT)
+        dLabelName = wx.StaticText(self, wx.ID_ANY, "New key file name: ", style=wx.ALIGN_RIGHT)
         dLabelName.SetMinSize((130, 30))
         sizer_2.Add(dLabelName, 0, wx.ALIGN_CENTER_HORIZONTAL, 0)
         sizer_2.Add(self.dTextName, 0, 0, 0)

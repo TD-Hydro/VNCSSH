@@ -23,6 +23,7 @@
         "paramiko",
         "popen",
         "pswd",
+        "pwsd",
         "pycparser",
         "pygame",
         "pyreadline",

@@ -70,6 +70,9 @@ class SSHConn:
         ft.get(source, sink + filename, callback)
         return True
     
+    def VirtualShell(self):
+        shell = self.sshc.invoke_shell()
+        return shell
 
     def CloseConn(self):
         self.sshc.close()

@@ -38,10 +38,11 @@ def ReverseFile(fileName):
     lines = []
 
     for l in f:
-        l = l.replace("\")\r\n","\"\r\n")
-        l = l.replace("\"):","\":")
-        l = l.replace("_(u\"","\"")
-        l = l.replace("\")","\"")
+        if l.find("_(u\""):
+            l = l.replace("\")\r\n","\"\r\n")
+            l = l.replace("\"):","\":")
+            l = l.replace("_(u\"","\"")
+            l = l.replace("\")","\"")
 
         lines.append(l)
     f.close()
@@ -59,10 +60,11 @@ if len(sys.argv) >= 3:
 elif len(sys.argv) == 2:
     if sys.argv[1] == "replace":
         ChangeFile("ui/MainFrame.py")
-        #ChangeFile("ui/FileTransferFrame.py")
+        ChangeFile("ui/FileTransferFrame.py")
         ChangeFile("ui/FileNameDialog.py")
         ChangeFile("ui/AboutDialog.py")
         ChangeFile("ui/SettingFrame.py")
+        ChangeFile("ui/TerminalFrame.py")
         ChangeFile("util/update.py")
     elif sys.argv[1] == "reverse":
         ReverseFile("ui/MainFrame.py")
@@ -70,6 +72,7 @@ elif len(sys.argv) == 2:
         ReverseFile("ui/FileNameDialog.py")
         ReverseFile("ui/AboutDialog.py")
         ReverseFile("ui/SettingFrame.py")
+        ReverseFile("ui/TerminalFrame.py")
         ReverseFile("util/update.py")
 else:
     ReverseFile("ui/MainFrame.py")
@@ -77,12 +80,14 @@ else:
     ReverseFile("ui/FileNameDialog.py")
     ReverseFile("ui/AboutDialog.py")
     ReverseFile("ui/SettingFrame.py")
+    ReverseFile("ui/TerminalFrame.py")
     ReverseFile("util/update.py")
     ChangeFile("ui/MainFrame.py")
     ChangeFile("ui/FileTransferFrame.py")
     ChangeFile("ui/FileNameDialog.py")
     ChangeFile("ui/AboutDialog.py")
     ChangeFile("ui/SettingFrame.py")
+    ChangeFile("ui/TerminalFrame.py")
     ChangeFile("util/update.py")
 
     

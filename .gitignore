@@ -119,5 +119,5 @@ ui/res/*
 
 setup.py
 
-innoscript.iss
+innoscript*.iss
 test.py

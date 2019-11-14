@@ -17,8 +17,8 @@ class AboutDialog(wx.Dialog):
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_DIALOG_STYLE
         wx.Dialog.__init__(self, *args, **kwds)
         self.SetSize((320, 240))
-        self.label_1 = wx.StaticText(self, wx.ID_ANY, _(u""))
-        self.button_1 = wx.Button(self, wx.ID_ANY, _(u"OK"))
+        self.label_1 = wx.StaticText(self, wx.ID_ANY, "")
+        self.button_1 = wx.Button(self, wx.ID_ANY, "OK")
 
         self.__set_properties()
         self.__do_layout()
@@ -28,7 +28,7 @@ class AboutDialog(wx.Dialog):
 
     def __set_properties(self):
         # begin wxGlade: AboutDialog.__set_properties
-        self.SetTitle(_(u"About"))
+        self.SetTitle("About")
         self.SetSize((320, 240))
         self.button_1.SetMinSize((90, 30))
         # end wxGlade
@@ -38,7 +38,7 @@ class AboutDialog(wx.Dialog):
         sizer_12 = wx.BoxSizer(wx.VERTICAL)
         sizer_13 = wx.BoxSizer(wx.VERTICAL)
         sizer_16 = wx.BoxSizer(wx.HORIZONTAL)
-        bitmap_1 = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap(_(u"./res/remote.png"), wx.BITMAP_TYPE_ANY))
+        bitmap_1 = wx.StaticBitmap(self, wx.ID_ANY, wx.Bitmap("./res/remote.png", wx.BITMAP_TYPE_ANY))
         bitmap_1.SetMinSize((64, 64))
         sizer_16.Add(bitmap_1, 0, wx.ALL, 25)
         sizer_16.Add(self.label_1, 0, wx.TOP, 25)
@@ -50,7 +50,7 @@ class AboutDialog(wx.Dialog):
         # end wxGlade
     
     def SetVersionControl(self, version):
-        self.label_1.SetLabel(_(u"VNC over SSH\n{0} Beta\n\nCopyright (C) 2019\nTD-Hydro").format(version))
+        self.label_1.SetLabel("VNC over SSH\n{0} Beta\n\nCopyright (C) 2019\nTD-Hydro".format(version))
 
     def aboutOK_onClick(self, event):  # wxGlade: AboutDialog.<event_handler>
         self.Destroy()

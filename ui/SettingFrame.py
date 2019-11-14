@@ -17,18 +17,21 @@ class SettingFrame(wx.Frame):
         # begin wxGlade: SettingFrame.__init__
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
-        self.SetSize((384, 298))
+        self.SetSize((350, 350))
         self.notebook_1 = wx.Notebook(self, wx.ID_ANY)
         self.panel_1 = wx.Panel(self.notebook_1, wx.ID_ANY)
-        self.radioBuiltInVNC = wx.RadioButton(self.panel_1, wx.ID_ANY, _(u"Built-in VNC Viewer"))
-        self.radioRealVNC = wx.RadioButton(self.panel_1, wx.ID_ANY, _(u"RealVNC Viewer"))
-        self.textCtrlVNCPath = wx.TextCtrl(self.panel_1, wx.ID_ANY, _(u""))
-        self.buttonVNCPath = wx.Button(self.panel_1, wx.ID_ANY, _(u"Browse..."))
-        self.textCtrlRemotePort = wx.TextCtrl(self.panel_1, wx.ID_ANY, _(u""))
+        self.radioBuiltInVNC = wx.RadioButton(self.panel_1, wx.ID_ANY, "Built-in VNC Viewer")
+        self.radioRealVNC = wx.RadioButton(self.panel_1, wx.ID_ANY, "RealVNC Viewer")
+        self.textCtrlVNCPath = wx.TextCtrl(self.panel_1, wx.ID_ANY, "")
+        self.buttonVNCPath = wx.Button(self.panel_1, wx.ID_ANY, "Browse...")
+        self.textCtrlRemotePort = wx.TextCtrl(self.panel_1, wx.ID_ANY, "")
+        self.notebook_1_Terminal = wx.Panel(self.notebook_1, wx.ID_ANY)
+        self.radioBuiltInTTY = wx.RadioButton(self.notebook_1_Terminal, wx.ID_ANY, "Built-in Terminal")
+        self.radioPowerShell = wx.RadioButton(self.notebook_1_Terminal, wx.ID_ANY, "PowerShell (Recommended)")
         self.notebook_1_Language = wx.Panel(self.notebook_1, wx.ID_ANY)
-        self.choiceLanguage = wx.Choice(self.notebook_1_Language, wx.ID_ANY, choices=[_(u"English"), _(u"Chinese (Simplified)"), _(u"Chinese (Traditional)")])
-        self.buttonOK = wx.Button(self, wx.ID_ANY, _(u"OK"))
-        self.buttonCancel = wx.Button(self, wx.ID_ANY, _(u"Cancel"))
+        self.choiceLanguage = wx.Choice(self.notebook_1_Language, wx.ID_ANY, choices=["English", "Chinese (Simplified)", "Chinese (Traditional)"])
+        self.buttonOK = wx.Button(self, wx.ID_ANY, "OK")
+        self.buttonCancel = wx.Button(self, wx.ID_ANY, "Cancel")
 
         self.__set_properties()
         self.__do_layout()
@@ -42,7 +45,7 @@ class SettingFrame(wx.Frame):
 
     def __set_properties(self):
         # begin wxGlade: SettingFrame.__set_properties
-        self.SetTitle(_(u"Settings"))
+        self.SetTitle("Settings")
         self.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_MENU))
         self.textCtrlVNCPath.SetMinSize((200, 28))
         self.buttonVNCPath.SetMinSize((88, 28))
@@ -62,6 +65,7 @@ class SettingFrame(wx.Frame):
         sizer_4 = wx.BoxSizer(wx.VERTICAL)
         sizer_15 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_18 = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_21 = wx.BoxSizer(wx.VERTICAL)
         sizer_11 = wx.BoxSizer(wx.VERTICAL)
         sizer_17 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_14 = wx.BoxSizer(wx.HORIZONTAL)
@@ -70,18 +74,23 @@ class SettingFrame(wx.Frame):
         sizer_14.Add(self.textCtrlVNCPath, 0, wx.ALL, 5)
         sizer_14.Add(self.buttonVNCPath, 0, wx.ALL, 5)
         sizer_11.Add(sizer_14, 0, wx.BOTTOM, 6)
-        portLabel = wx.StaticText(self.panel_1, wx.ID_ANY, _(u"Remote Port:"))
+        portLabel = wx.StaticText(self.panel_1, wx.ID_ANY, "Remote Port:")
         sizer_17.Add(portLabel, 0, wx.ALL, 4)
         sizer_17.Add(self.textCtrlRemotePort, 0, wx.ALL, 0)
         sizer_11.Add(sizer_17, 1, 0, 0)
         self.panel_1.SetSizer(sizer_11)
-        label_2 = wx.StaticText(self.notebook_1_Language, wx.ID_ANY, _(u"Display Language"))
+        sizer_21.Add(self.radioBuiltInTTY, 0, wx.ALL, 5)
+        sizer_21.Add(self.radioPowerShell, 0, wx.ALL, 5)
+        self.notebook_1_Terminal.SetSizer(sizer_21)
+        label_2 = wx.StaticText(self.notebook_1_Language, wx.ID_ANY, "Display Language")
         sizer_18.Add(label_2, 0, wx.ALL, 9)
         sizer_18.Add(self.choiceLanguage, 0, wx.ALL, 5)
         self.notebook_1_Language.SetSizer(sizer_18)
-        self.notebook_1.AddPage(self.panel_1, _(u"VNC Viewer"))
-        self.notebook_1.AddPage(self.notebook_1_Language, _(u"Language"))
+        self.notebook_1.AddPage(self.panel_1, "VNC Viewer")
+        self.notebook_1.AddPage(self.notebook_1_Terminal, "Terminal")
+        self.notebook_1.AddPage(self.notebook_1_Language, "Language")
         sizer_4.Add(self.notebook_1, 1, wx.EXPAND, 0)
+        sizer_15.Add((0, 0), 0, 0, 0)
         sizer_15.Add(self.buttonOK, 0, 0, 0)
         sizer_15.Add(self.buttonCancel, 0, 0, 0)
         sizer_4.Add(sizer_15, 0, wx.ALIGN_BOTTOM | wx.ALIGN_RIGHT | wx.SHAPED, 0)
@@ -91,8 +100,10 @@ class SettingFrame(wx.Frame):
 
 
     def LoadSetting(self):
-        local, real, port = util.settingread.GetVNCSetting()
-        lang = int(util.settingread.GetLangSetting())
+        config = util.settingread.GetSettings()
+        local, real, port = util.settingread.GetVNCSetting(config)
+        lang = int(util.settingread.GetLangSetting(config))
+        term = util.settingread.GetTerminalSetting(config)
         if local:
             self.radioBuiltInVNC.SetValue(True)
             self.radioRealVNC.SetValue(False)
@@ -103,6 +114,10 @@ class SettingFrame(wx.Frame):
             self.radioRealVNC.SetValue(True)
             self.buttonVNCPath.Enable()
             self.textCtrlVNCPath.Enable()
+
+        self.radioBuiltInTTY.SetValue(True if term else False)
+        self.radioPowerShell.SetValue(False if term else True)
+        
         self.textCtrlVNCPath.SetValue(real)
         self.textCtrlRemotePort.SetValue(port)
         self.choiceLanguage.SetSelection(lang)
@@ -116,15 +131,18 @@ class SettingFrame(wx.Frame):
         self.textCtrlVNCPath.Enable()
 
     def buttonVNCPath_onClick(self, event):  # wxGlade: SettingFrame.<event_handler>
-        fileDialog = wx.FileDialog(self, _(u"RealVNC Viewer"), wildcard=_(u"Executable (*.exe)|*.exe"), style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        fileDialog = wx.FileDialog(self, "RealVNC Viewer", wildcard="Executable (*.exe)|*.exe", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
         fileDialog.ShowModal()
         pathname = fileDialog.GetPath()
         fileDialog.Destroy()
         self.textCtrlVNCPath.Value = pathname
 
     def buttonOK_onClick(self, event):  # wxGlade: SettingFrame.<event_handler>
-        util.settingread.SetVNCSetting(self.radioBuiltInVNC.GetValue(), self.textCtrlVNCPath.GetValue(), self.textCtrlRemotePort.GetValue())
-        util.settingread.SetLangSetting(self.choiceLanguage.GetSelection())
+        config = util.settingread.GetSettings()
+        util.settingread.SetVNCSetting(config, self.radioBuiltInVNC.GetValue(), self.textCtrlVNCPath.GetValue(), self.textCtrlRemotePort.GetValue())
+        util.settingread.SetLangSetting(config, self.choiceLanguage.GetSelection())
+        util.settingread.SetTerminalSetting(config, self.radioBuiltInTTY.GetValue())
+        util.settingread.WriteSetting(config)
         self.Destroy()
 
     def buttonCancel_onClick(self, event):  # wxGlade: SettingFrame.<event_handler>
