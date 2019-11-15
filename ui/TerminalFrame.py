@@ -18,8 +18,7 @@ class TerminalFrame(wx.Frame):
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
         self.SetSize((500, 500))
-        self.terminalTextCtrl = wx.TextCtrl(
-            self, wx.ID_ANY, "123", style=wx.TE_MULTILINE | wx.TE_WORDWRAP)
+        self.terminalTextCtrl = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_MULTILINE | wx.TE_WORDWRAP)
 
         self.__set_properties()
         self.__do_layout()
@@ -36,9 +35,12 @@ class TerminalFrame(wx.Frame):
         self.SetTitle("Terminal")
         self.terminalTextCtrl.SetBackgroundColour(wx.Colour(0, 0, 0))
         self.terminalTextCtrl.SetForegroundColour(wx.Colour(255, 255, 255))
-        self.terminalTextCtrl.SetFont(wx.Font(
-            12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, "Consolas"))
+        self.terminalTextCtrl.SetFont(wx.Font(12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, "Consolas"))
         # end wxGlade
+        
+        # Windows icon attachment 
+        icon = wx.Icon(wx.IconLocation('./res/remote.ico'))
+        self.SetIcon(icon)
 
     def __do_layout(self):
         # begin wxGlade: TerminalFrame.__do_layout
@@ -58,7 +60,7 @@ class TerminalFrame(wx.Frame):
         self.sshc = connection
         self.shell = self.sshc.VirtualShell()
 
-    def InvoleShell(self):
+    def InvokeShell(self):
         import threading
         # sys.stdout.write(
         #    "Line-buffered terminal emulation. Press F6 or ^Z to send EOF.\r\n\r\n"
@@ -76,36 +78,25 @@ class TerminalFrame(wx.Frame):
                         if firstLine != -1:
                             dataString = dataString[firstLine:]
                         self.entered = False
-
+                        self.tabbed = False
+                    
                     if not self.tabbed:
                         self.terminalTextCtrl.AppendText(dataString)
                         lenLine = self.terminalTextCtrl.GetNumberOfLines()
                         self.reserveLength = self.terminalTextCtrl.GetLineLength(
                             lenLine - 1)
+                        print(self.reserveLength, self.tabbed)
                     else:
-                        cursor = self.terminalTextCtrl.GetInsertionPoint()
+                        print(dataString)
+                        
                         lenLine = self.terminalTextCtrl.GetNumberOfLines()
-                        trimPoint = cursor - \
-                            self.terminalTextCtrl.GetLineLength(
-                                lenLine - 1) + self.reserveLength
-                        self.terminalTextCtrl.Remove(trimPoint, cursor)
-                        self.tabbed = False
+
                         self.terminalTextCtrl.AppendText(dataString)
+                        print(dataString)
+                        print(self.reserveLength, self.tabbed)
 
         writer = threading.Thread(target=WriteAll, args=(self.shell,))
         writer.start()
-
-        '''
-        try:
-            while True:
-                d = sys.stdin.read(1)
-                if not d:
-                    break
-                chan.send(d)
-        except EOFError:
-            # user hit ^Z or F6
-            pass
-        '''
 
     def InputToShell(self, event):
         key = event.GetKeyCode()
@@ -119,8 +110,12 @@ class TerminalFrame(wx.Frame):
             self.shell.send(aimLine[self.reserveLength:])
             self.shell.send('\t')
             self.tabbed = True
+            wordPoint = self.terminalTextCtrl.GetInsertionPoint()
+            trimPoint = wordPoint - self.terminalTextCtrl.GetLineLength(lenLine - 1) + self.reserveLength
+            self.terminalTextCtrl.Remove(trimPoint, wordPoint)
         elif key == wx.WXK_RETURN:
             aimLine = self.terminalTextCtrl.GetLineText(lenLine-1)
+            print(aimLine[self.reserveLength:])
             self.shell.send(aimLine[self.reserveLength:] + '\n')
             self.entered = True
         elif key == wx.WXK_BACK:

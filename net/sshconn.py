@@ -71,7 +71,7 @@ class SSHConn:
         return True
     
     def VirtualShell(self):
-        shell = self.sshc.invoke_shell()
+        shell = self.sshc.invoke_shell(term='vt100-mono')
         return shell
 
     def CloseConn(self):

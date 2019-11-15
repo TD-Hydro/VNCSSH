@@ -171,7 +171,7 @@ class MainFrame(wx.Frame):
                 tty.SetConn(self.sshc)
                 tty.Show()
                 tty.Maximize(True)
-                tty.InvoleShell()
+                tty.InvokeShell()
             else:
                 self.sshc.OpenTerminal()
         

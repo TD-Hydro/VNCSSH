@@ -1,3 +1,7 @@
+## 0.3.4
+- Internal simple terminal releases
+- Improvement on loading settings
+
 ## 0.3.3
 - Change name to "VNCSSH"
 - Add multi language support
@@ -12,7 +16,7 @@
 - Non-blocking gui when connecting to the server
 
 ## 0.3.0
-- Initial project starts
+- Initial project beta
 
 ## 0.2.0
 - Alpha internal test
