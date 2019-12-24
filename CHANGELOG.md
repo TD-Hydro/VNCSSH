@@ -1,5 +1,5 @@
-## 0.3.4
-- Internal simple terminal releases
+## 0.4.0
+- Internal simple terminal with limited functionality releases
 - Improvement on loading settings
 
 ## 0.3.3

@@ -51,7 +51,7 @@ if __name__ == '__main__':
     util.toolBox.CheckAndAddSetting('terminal',[('local','0')])
 
     # Check version
-    appVersion = "0.3.3"
+    appVersion = "0.4.0"
     updateCheck = AsyncUpdateCheck(appVersion, False)
     updateCheck.start()
     

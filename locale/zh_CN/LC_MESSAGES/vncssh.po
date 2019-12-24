@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TD-Hydro\n"
-"POT-Creation-Date: 2019-08-09 01:11-0400\n"
-"PO-Revision-Date: 2019-08-09 01:13-0400\n"
+"POT-Creation-Date: 2019-12-23 23:02-0500\n"
+"PO-Revision-Date: 2019-12-23 23:04-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -15,11 +15,11 @@ msgstr ""
 "X-Poedit-SearchPath-0: ui\n"
 "X-Poedit-SearchPath-1: util/update.py\n"
 
-#: ui/AboutDialog.py:21 ui/FilenameDialog.py:21 ui/SettingFrame.py:30
+#: ui/AboutDialog.py:21 ui/FilenameDialog.py:21 ui/SettingFrame.py:33
 msgid "OK"
 msgstr "确认"
 
-#: ui/AboutDialog.py:31 ui/MainFrame.py:70
+#: ui/AboutDialog.py:31 ui/MainFrame.py:72
 msgid "About"
 msgstr "关于"
 
@@ -42,18 +42,6 @@ msgstr ""
 "版权 (C) 2019\n"
 "TD-Hydro"
 
-#: ui/FileTransferFrame.py:21 ui/FileTransferFrame.py:25
-msgid "←"
-msgstr ""
-
-#: ui/FileTransferFrame.py:22 ui/FileTransferFrame.py:26
-msgid "↑"
-msgstr ""
-
-#: ui/FileTransferFrame.py:23 ui/FileTransferFrame.py:27
-msgid "⟳"
-msgstr ""
-
 #: ui/FileTransferFrame.py:31
 msgid "Upload"
 msgstr "上传"
@@ -66,46 +54,58 @@ msgstr "下载"
 msgid "File Transfer"
 msgstr "文件传输"
 
-#: ui/FileTransferFrame.py:59 ui/FileTransferFrame.py:64
+#: ui/FileTransferFrame.py:59 ui/FileTransferFrame.py:67
 msgid "Go back"
 msgstr "返回"
 
-#: ui/FileTransferFrame.py:61 ui/FileTransferFrame.py:66
+#: ui/FileTransferFrame.py:60 ui/FileTransferFrame.py:68
+msgid "res\\la.png"
+msgstr ""
+
+#: ui/FileTransferFrame.py:62 ui/FileTransferFrame.py:70
 msgid "Go up"
 msgstr "上一层"
 
-#: ui/FileTransferFrame.py:69 ui/FileTransferFrame.py:136
+#: ui/FileTransferFrame.py:63 ui/FileTransferFrame.py:71
+msgid "res\\ua.png"
+msgstr ""
+
+#: ui/FileTransferFrame.py:65 ui/FileTransferFrame.py:73
+msgid "res\\rf.png"
+msgstr ""
+
+#: ui/FileTransferFrame.py:75 ui/FileTransferFrame.py:142
 msgid "File"
 msgstr "文件"
 
-#: ui/FileTransferFrame.py:70 ui/FileTransferFrame.py:73
+#: ui/FileTransferFrame.py:76 ui/FileTransferFrame.py:79
 msgid "Type"
 msgstr "类型"
 
-#: ui/FileTransferFrame.py:72
+#: ui/FileTransferFrame.py:78
 msgid "File name"
 msgstr "文件名"
 
-#: ui/FileTransferFrame.py:134 ui/FileTransferFrame.py:194
-#: ui/FileTransferFrame.py:280
+#: ui/FileTransferFrame.py:140 ui/FileTransferFrame.py:200
+#: ui/FileTransferFrame.py:286
 msgid "Folder"
 msgstr "文件夹"
 
-#: ui/FileTransferFrame.py:138
+#: ui/FileTransferFrame.py:144
 msgid " file"
 msgstr " 文件"
 
-#: ui/FileTransferFrame.py:166 ui/FileTransferFrame.py:187
+#: ui/FileTransferFrame.py:172 ui/FileTransferFrame.py:193
 msgid "Permission is denied: "
 msgstr "访问被拒绝： "
 
-#: ui/FileTransferFrame.py:166 ui/FileTransferFrame.py:187 ui/MainFrame.py:214
-#: ui/MainFrame.py:217 ui/MainFrame.py:369 ui/MainFrame.py:372
-#: ui/MainFrame.py:375 ui/MainFrame.py:378
+#: ui/FileTransferFrame.py:172 ui/FileTransferFrame.py:193 ui/MainFrame.py:225
+#: ui/MainFrame.py:228 ui/MainFrame.py:380 ui/MainFrame.py:383
+#: ui/MainFrame.py:386 ui/MainFrame.py:389
 msgid "Error"
 msgstr "错误"
 
-#: ui/FilenameDialog.py:22 ui/SettingFrame.py:31
+#: ui/FilenameDialog.py:22 ui/SettingFrame.py:34
 msgid "Cancel"
 msgstr "取消"
 
@@ -117,145 +117,145 @@ msgstr "新密钥"
 msgid "New key file name: "
 msgstr "新密钥名： "
 
-#: ui/MainFrame.py:54
+#: ui/MainFrame.py:56
 msgid "Shell\tCtrl+T"
 msgstr "Shell\tCtrl+T"
 
-#: ui/MainFrame.py:56
+#: ui/MainFrame.py:58
 msgid "File Transfer\tCtrl+F"
 msgstr "文件传输\tCtrl+F"
 
-#: ui/MainFrame.py:58
+#: ui/MainFrame.py:60
 msgid "&Tools"
 msgstr "工具(&T)"
 
-#: ui/MainFrame.py:60
+#: ui/MainFrame.py:62
 msgid "Check for Updates..."
 msgstr "检查更新..."
 
-#: ui/MainFrame.py:62
+#: ui/MainFrame.py:64
 msgid "E&xit\tAlt+F4"
 msgstr "退出(X)\tAlt+F4"
 
-#: ui/MainFrame.py:64
+#: ui/MainFrame.py:66
 msgid "&File"
 msgstr "文件(F)"
 
-#: ui/MainFrame.py:66
+#: ui/MainFrame.py:68
 msgid "Help Document\tF1"
 msgstr "帮助文档"
 
-#: ui/MainFrame.py:68 ui/SettingFrame.py:45
+#: ui/MainFrame.py:70 ui/SettingFrame.py:48
 msgid "Settings"
 msgstr "设置"
 
-#: ui/MainFrame.py:72
+#: ui/MainFrame.py:74
 msgid "&Help"
 msgstr "帮助(H)"
 
-#: ui/MainFrame.py:78
+#: ui/MainFrame.py:80
 msgid "Authentication method:"
 msgstr "认证方式："
 
-#: ui/MainFrame.py:78
+#: ui/MainFrame.py:80
 msgid "Password"
 msgstr "密码"
 
-#: ui/MainFrame.py:78
+#: ui/MainFrame.py:80
 msgid "Public Key"
 msgstr "公钥"
 
-#: ui/MainFrame.py:79
+#: ui/MainFrame.py:81
 msgid "SSH Key File: "
 msgstr "SSH密钥文件： "
 
-#: ui/MainFrame.py:81
+#: ui/MainFrame.py:83
 msgid "Add Key"
 msgstr "添加密钥"
 
-#: ui/MainFrame.py:82
+#: ui/MainFrame.py:84
 msgid "Password:"
 msgstr "密码："
 
-#: ui/MainFrame.py:85
+#: ui/MainFrame.py:87
 msgid "Show Password"
 msgstr "显示密码"
 
-#: ui/MainFrame.py:86 ui/MainFrame.py:207
+#: ui/MainFrame.py:88 ui/MainFrame.py:218
 msgid "Connect"
 msgstr "连接"
 
-#: ui/MainFrame.py:87 ui/MainFrame.py:268 ui/MainFrame.py:284
+#: ui/MainFrame.py:89 ui/MainFrame.py:279 ui/MainFrame.py:295
 msgid "Connect to VNC"
 msgstr "连接VNC"
 
-#: ui/MainFrame.py:107
+#: ui/MainFrame.py:109
 msgid "VNC over SSH"
 msgstr "VNC over SSH"
 
-#: ui/MainFrame.py:112 ui/MainFrame.py:262
+#: ui/MainFrame.py:114 ui/MainFrame.py:273
 msgid "Not connected"
 msgstr "未连接"
 
-#: ui/MainFrame.py:135
+#: ui/MainFrame.py:137
 msgid "IP Address:"
 msgstr "IP地址："
 
-#: ui/MainFrame.py:138
+#: ui/MainFrame.py:140
 msgid "Username: "
 msgstr "用户名： "
 
-#: ui/MainFrame.py:163 ui/MainFrame.py:169
+#: ui/MainFrame.py:165 ui/MainFrame.py:180
 msgid "Sever not connected"
 msgstr "服务器未连接"
 
-#: ui/MainFrame.py:163 ui/MainFrame.py:169
+#: ui/MainFrame.py:165 ui/MainFrame.py:180
 msgid "Not Connected"
 msgstr "未连接"
 
-#: ui/MainFrame.py:186
+#: ui/MainFrame.py:197
 msgid "Open SSH Key File"
 msgstr "打开SSH密钥文件"
 
-#: ui/MainFrame.py:200
+#: ui/MainFrame.py:211
 msgid "Name cannot be an empty string"
 msgstr "命名不能为空"
 
-#: ui/MainFrame.py:200
+#: ui/MainFrame.py:211
 msgid "Info"
 msgstr "信息"
 
-#: ui/MainFrame.py:204 ui/MainFrame.py:250
+#: ui/MainFrame.py:215 ui/MainFrame.py:261
 msgid "Disconnect"
 msgstr "断开连接"
 
-#: ui/MainFrame.py:214
+#: ui/MainFrame.py:225
 msgid "IP address is illegal"
 msgstr "IP地址不合法"
 
-#: ui/MainFrame.py:217
+#: ui/MainFrame.py:228
 msgid "Username cannot be empty"
 msgstr "用户名不能为空"
 
-#: ui/MainFrame.py:231
+#: ui/MainFrame.py:242
 msgid "Connecting..."
 msgstr "连接中..."
 
-#: ui/MainFrame.py:251
+#: ui/MainFrame.py:262
 msgid "Connected to "
 msgstr "连接至 "
 
-#: ui/MainFrame.py:270
+#: ui/MainFrame.py:281
 msgid "Disconnect VNC"
 msgstr "断开VNC连接"
 
-#: ui/MainFrame.py:369 ui/MainFrame.py:372 ui/MainFrame.py:375
-#: ui/MainFrame.py:378
+#: ui/MainFrame.py:380 ui/MainFrame.py:383 ui/MainFrame.py:386
+#: ui/MainFrame.py:389
 msgid "Connect to server "
 msgstr "连接至服务器 "
 
-#: ui/MainFrame.py:369 ui/MainFrame.py:372 ui/MainFrame.py:375
-#: ui/MainFrame.py:378
+#: ui/MainFrame.py:380 ui/MainFrame.py:383 ui/MainFrame.py:386
+#: ui/MainFrame.py:389
 msgid " failed: \n"
 msgstr " 失败：\n"
 
@@ -263,7 +263,7 @@ msgstr " 失败：\n"
 msgid "Built-in VNC Viewer"
 msgstr "内建 VNC Viewer"
 
-#: ui/SettingFrame.py:24 ui/SettingFrame.py:115
+#: ui/SettingFrame.py:24 ui/SettingFrame.py:134
 msgid "RealVNC Viewer"
 msgstr ""
 
@@ -272,41 +272,57 @@ msgid "Browse..."
 msgstr "浏览..."
 
 #: ui/SettingFrame.py:29
+msgid "Built-in Terminal"
+msgstr "内建终端"
+
+#: ui/SettingFrame.py:30
+msgid "PowerShell (Recommended)"
+msgstr "PowerShell (推荐)"
+
+#: ui/SettingFrame.py:32
 msgid "English"
 msgstr "英语"
 
-#: ui/SettingFrame.py:29
+#: ui/SettingFrame.py:32
 msgid "Chinese (Simplified)"
 msgstr "中文（简体）"
 
-#: ui/SettingFrame.py:29
+#: ui/SettingFrame.py:32
 msgid "Chinese (Traditional)"
 msgstr "中文（繁体）"
 
-#: ui/SettingFrame.py:71
+#: ui/SettingFrame.py:77
 msgid "Remote Port:"
 msgstr "远程端口："
 
-#: ui/SettingFrame.py:76
+#: ui/SettingFrame.py:85
 msgid "Display Language"
 msgstr "显示语言"
 
-#: ui/SettingFrame.py:80
+#: ui/SettingFrame.py:89
 msgid "VNC Viewer"
 msgstr ""
 
-#: ui/SettingFrame.py:81
+#: ui/SettingFrame.py:90 ui/TerminalFrame.py:35
+msgid "Terminal"
+msgstr "终端"
+
+#: ui/SettingFrame.py:91
 msgid "Language"
 msgstr "语言"
 
-#: ui/SettingFrame.py:115
+#: ui/SettingFrame.py:134
 msgid "Executable (*.exe)|*.exe"
 msgstr "可执行文件 (*.exe)|*.exe"
+
+#: ui/TerminalFrame.py:38
+msgid "Consolas"
+msgstr ""
 
 #: util/update.py:16
 #, python-brace-format
 msgid "A new version {0} of VNCSSH is avaliable. Download now?"
-msgstr "新版VNCSSH {0} 已发布.。现在下载吗？"
+msgstr "新版VNCSSH {0} 已发布。现在下载吗？"
 
 #: util/update.py:16 util/update.py:21
 msgid "Update"

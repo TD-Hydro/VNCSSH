@@ -18,24 +18,24 @@ class TerminalFrame(wx.Frame):
         kwds["style"] = kwds.get("style", 0) | wx.DEFAULT_FRAME_STYLE
         wx.Frame.__init__(self, *args, **kwds)
         self.SetSize((500, 500))
-        self.terminalTextCtrl = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_MULTILINE | wx.TE_WORDWRAP)
+        self.terminalTextCtrl = wx.TextCtrl(self, wx.ID_ANY, _(u""), style=wx.TE_MULTILINE | wx.TE_WORDWRAP)
 
         self.__set_properties()
         self.__do_layout()
         # end wxGlade
 
         self.terminalTextCtrl.Bind(wx.EVT_CHAR, self.InputToShell)
-
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.reserveLength = 0
         self.entered = False
         self.tabbed = False
 
     def __set_properties(self):
         # begin wxGlade: TerminalFrame.__set_properties
-        self.SetTitle("Terminal")
+        self.SetTitle(_(u"Terminal"))
         self.terminalTextCtrl.SetBackgroundColour(wx.Colour(0, 0, 0))
         self.terminalTextCtrl.SetForegroundColour(wx.Colour(255, 255, 255))
-        self.terminalTextCtrl.SetFont(wx.Font(12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, "Consolas"))
+        self.terminalTextCtrl.SetFont(wx.Font(12, wx.FONTFAMILY_MODERN, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, _(u"Consolas")))
         # end wxGlade
         
         # Windows icon attachment 
@@ -52,7 +52,9 @@ class TerminalFrame(wx.Frame):
         self.Layout()
         # end wxGlade
 
-    def onClose(self, event):
+    def OnClose(self, event):
+        if self.shell:
+            self.shell.close()
         self.sshc.CloseConn()
         self.Destroy()
 
@@ -62,41 +64,41 @@ class TerminalFrame(wx.Frame):
 
     def InvokeShell(self):
         import threading
-        # sys.stdout.write(
-        #    "Line-buffered terminal emulation. Press F6 or ^Z to send EOF.\r\n\r\n"
-        # )
+        self.writer = threading.Thread(target=self.WriteAll, args=(self.shell,))
+        self.writer.start()
 
-        def WriteAll(sock):
-            while True:
-                data = sock.recv(256)
-                if not data:
+    def WriteAll(self, sock):
+        while True:
+            data = sock.recv(256)
+            if not data:
+                try:
                     self.Close()
+                except RuntimeError:
+                    pass
+                break
+            else:
+                dataString = data.decode('utf-8')
+                if self.entered:
+                    firstLine = dataString.find('\n')
+                    if firstLine != -1:
+                        dataString = dataString[firstLine:]
+                    self.entered = False
+                    self.tabbed = False
+                
+                if not self.tabbed:
+                    self.terminalTextCtrl.AppendText(dataString)
+                    lenLine = self.terminalTextCtrl.GetNumberOfLines()
+                    self.reserveLength = self.terminalTextCtrl.GetLineLength(
+                        lenLine - 1)
+                    #print(self.reserveLength, self.tabbed)
                 else:
-                    dataString = data.decode('utf-8')
-                    if self.entered:
-                        firstLine = dataString.find('\n')
-                        if firstLine != -1:
-                            dataString = dataString[firstLine:]
-                        self.entered = False
-                        self.tabbed = False
+                    #print(dataString)
                     
-                    if not self.tabbed:
-                        self.terminalTextCtrl.AppendText(dataString)
-                        lenLine = self.terminalTextCtrl.GetNumberOfLines()
-                        self.reserveLength = self.terminalTextCtrl.GetLineLength(
-                            lenLine - 1)
-                        print(self.reserveLength, self.tabbed)
-                    else:
-                        print(dataString)
-                        
-                        lenLine = self.terminalTextCtrl.GetNumberOfLines()
+                    lenLine = self.terminalTextCtrl.GetNumberOfLines()
 
-                        self.terminalTextCtrl.AppendText(dataString)
-                        print(dataString)
-                        print(self.reserveLength, self.tabbed)
-
-        writer = threading.Thread(target=WriteAll, args=(self.shell,))
-        writer.start()
+                    self.terminalTextCtrl.AppendText(dataString)
+                    #print(dataString)
+                    #print(self.reserveLength, self.tabbed)
 
     def InputToShell(self, event):
         key = event.GetKeyCode()
@@ -106,16 +108,17 @@ class TerminalFrame(wx.Frame):
         cursorLine = cursor[2]
         cursorColumn = cursor[1]
         if key == wx.WXK_TAB:
-            aimLine = self.terminalTextCtrl.GetLineText(lenLine-1)
-            self.shell.send(aimLine[self.reserveLength:])
-            self.shell.send('\t')
-            self.tabbed = True
-            wordPoint = self.terminalTextCtrl.GetInsertionPoint()
-            trimPoint = wordPoint - self.terminalTextCtrl.GetLineLength(lenLine - 1) + self.reserveLength
-            self.terminalTextCtrl.Remove(trimPoint, wordPoint)
+            # aimLine = self.terminalTextCtrl.GetLineText(lenLine-1)
+            # self.shell.send(aimLine[self.reserveLength:])
+            # self.shell.send('^[H')
+            # self.tabbed = True
+            # wordPoint = self.terminalTextCtrl.GetInsertionPoint()
+            # trimPoint = wordPoint - self.terminalTextCtrl.GetLineLength(lenLine - 1) + self.reserveLength
+            # self.terminalTextCtrl.Remove(trimPoint, wordPoint)
+            pass
         elif key == wx.WXK_RETURN:
             aimLine = self.terminalTextCtrl.GetLineText(lenLine-1)
-            print(aimLine[self.reserveLength:])
+            #print(aimLine[self.reserveLength:])
             self.shell.send(aimLine[self.reserveLength:] + '\n')
             self.entered = True
         elif key == wx.WXK_BACK:
@@ -127,5 +130,8 @@ class TerminalFrame(wx.Frame):
             if cursorLine < lenLine - 1:
                 return False
             event.Skip()
+    # def InputToShell(self, event):
+    #     key = event.GetKeyCode()
+    #     print(key)
 
 # end of class TerminalFrame
