@@ -1,6 +1,7 @@
 ## 0.4.0
 - Internal simple terminal with limited functionality releases
 - Improvement on loading settings
+- Fix internal VNC viewer cannot open using binary package
 
 ## 0.3.3
 - Change name to "VNCSSH"
