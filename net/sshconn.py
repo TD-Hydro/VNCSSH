@@ -49,15 +49,15 @@ class SSHConn:
         directories = outread.split("\n")
         folders = []
         files = []
-        for dir in directories:
-            if dir == "":
+        for di in directories:
+            if di == "":
                 continue
-            elif dir[-1] == "/":
-                folders.append(dir[:-1])
-            elif dir[-1] == "*" or dir[-1] == "@":
-                files.append(dir[:-1])
-            elif dir[-1] != "|" and dir[-1] != "=":
-                files.append(dir)
+            elif di[-1] == "/":
+                folders.append(di[:-1])
+            elif di[-1] == "*" or di[-1] == "@":
+                files.append(di[:-1])
+            elif di[-1] != "|" and di[-1] != "=":
+                files.append(di)
         return (folders, files)
     
     def SendFile(self, source, filename, sink, callback):
