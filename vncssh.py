@@ -17,6 +17,7 @@ from util.update import AsyncUpdateCheck
 
 if __name__ == '__main__':
     # Freeze support
+    windowsStore = False
     if getattr(sys, 'frozen', False):
         sys.stdout = util.fakestd.Fakestd()
         sys.stderr = util.fakestd.Fakestd()
@@ -52,8 +53,9 @@ if __name__ == '__main__':
 
     # Check version
     appVersion = "0.4.0"
-    updateCheck = AsyncUpdateCheck(appVersion, False)
-    updateCheck.start()
+    if not windowsStore:
+        updateCheck = AsyncUpdateCheck(appVersion, False)
+        updateCheck.start()
     
     # Init app
     os.chdir(cwd)

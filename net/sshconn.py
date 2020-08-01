@@ -1,5 +1,5 @@
 import paramiko
-from multiprocessing import Process
+from threading import Thread
 import subprocess
 from net.forward import forward_tunnel
 
@@ -12,18 +12,20 @@ class SSHConn:
         self.sshc = paramiko.SSHClient()
         self.sshc.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.t = {}
+        self.forwarder = {}
         self.ssht = paramiko.SSHClient()
         self.ssht.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
     def OpenVNCTunnel(self, localPort, remotePort):
-        t0 = Process(target = self.TunnelThread, args=(localPort,remotePort))
+        t0 = Thread(target = self.TunnelThread, args=(localPort,remotePort))
         t0.daemon = True
         t0.start()
         self.t[remotePort] = t0
         return True
 
     def StopTunnel(self,remotePort):
-        self.t[remotePort].terminate()
+        self.forwarder[remotePort].shutdown()
+        self.t[remotePort].join()
         self.ssht.close()
 
     def TunnelThread(self, localPort, remotePort):
@@ -32,7 +34,7 @@ class SSHConn:
         else:
             self.ssht.connect(self.IP, 22, username=self.Username, password=self.Password)
         transport = self.ssht.get_transport()
-        forward_tunnel(localPort, "localhost", remotePort, transport)
+        self.forwarder[remotePort] = forward_tunnel(localPort, "localhost", remotePort, transport)
 
 
     def OpenTerminal(self):

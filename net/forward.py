@@ -87,7 +87,9 @@ def forward_tunnel(local_port, remote_host, remote_port, transport):
         chain_host = remote_host
         chain_port = remote_port
         ssh_transport = transport
-    ForwardServer(('', local_port), SubHander).serve_forever()
+    forwardServer = ForwardServer(('', local_port), SubHander)
+    forwardServer.serve_forever()
+    return forwardServer
 
 
 def verbose(s):
